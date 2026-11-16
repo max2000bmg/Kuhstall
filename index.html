@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Vöchter im Kuhstall · 2026</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐮%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐮%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
   <!-- QR-Codes sind optional. Ohne Internet/CDN funktionieren die Spielerlinks weiterhin. -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -47,7 +47,7 @@
       <p id="roleDescription"></p>
       <div class="notice" id="phaseDescription"></div>
       <div class="row topline"><button id="phase2Btn" class="secondary">⏩ Phase 2 starten</button><button id="phase3Btn" class="secondary">⏩ Phase 3 starten</button><button id="finalBtn" class="danger">🏁 Finale starten</button></div>
-      <p class="small">Nur auf Ansage des Stallmeisters drücken. Ein Vorwärtssprung ist jederzeit möglich; bereits erledigte Aufgaben bleiben erhalten.</p>
+      <p class="small">Nur auf Ansage des Stallmeisters drücken. Ein Vorwärtssprung ist jederzeit möglich. Erledigte Aufgaben und Punkte bleiben erhalten; unerledigte Aufgaben früherer Phasen verfallen.</p>
     </div>
     <div id="missionPanel" class="card"><h2>📋 Meine Missionen</h2><div id="missionList"></div></div>
     <div id="finalPanel" class="card hidden">
@@ -70,7 +70,7 @@
     <div id="evaluation" class="topline"></div>
     <details class="topline"><summary>Inkompetenz-Meisterschaft auswerten</summary><p>Trage die Punkte der Teammitglieder ein, wie sie auf deren Handys angezeigt werden.</p><div id="crewScores"></div><button id="rankBtn" class="secondary">Rangliste berechnen</button><div id="ranking"></div></details>
   </section>
-  <footer>Vöchter im Kuhstall 2026 · Statisch auf GitHub Pages · Ohne Backend</footer>
+  <footer>Vöchter im Kuhstall 2026 · Version 2.3 (Einzelmissionen pro Phase) · Ohne Backend</footer>
 </main>
 <script>
 'use strict';
@@ -474,6 +474,7 @@ const MISSIONS = {
 // 3. GRUNDLEGENDE HILFSFUNKTIONEN
 // ============================================================================
 const $ = id => document.getElementById(id);
+// Gleicher Speicher-Schlüssel: bestehende Punkte und Spielstände bleiben erhalten.
 const STORAGE_KEY = 'voechter-im-kuhstall-v1';
 const HOST_KEY = 'voechter-im-kuhstall-host-v1';
 let state = null;
@@ -520,54 +521,60 @@ function shuffle(array) {
 // persönlichen Spielerlink mitgegeben. So bekommen die beiden Vöchter
 // garantiert unterschiedliche Missionen pro Phase.
 //
-// Crew:     2 Missionen pro Phase (= 6 insgesamt)
+// Crew:     ALLE Missionen je Phase, individuell gemischt
 // Vöchter:  1 Mission pro Phase (= 3 Pflichtmissionen insgesamt)
 //
-// Crew-Aufgaben können sich bei vielen Spielern wiederholen, da pro Phase
-// nur 12 Aufgaben vorhanden sind, aber bis zu 8 Crewmitglieder je 2 brauchen.
-// Wir verteilen zunächst alle Aufgaben einmal, bevor eine wiederholt wird.
+// Jedes Crewmitglied erhält alle Missionen in eigener Reihenfolge.
+// Die Vöchter erhalten je eine unterschiedliche Pflichtmission pro Phase.
 function assignMissionsToPlayers(players) {
   const result = players.map(player => ({ ...player, assignedMissions: [] }));
 
-  for (const role of ['crew', 'voechter']) {
-    const members = result.filter(player => player.role === role);
-    const amount = role === 'crew' ? 2 : 1;
-
+  // Alle Crew-Missionen pro Phase zufällig sortieren. Neue Missionen im
+  // MISSIONS-Pool werden bei jeder NEUEN Runde automatisch mitgenommen.
+  for (const member of result.filter(player => player.role === 'crew')) {
     for (const phase of SETTINGS.phases) {
-      const pool = MISSIONS[role].filter(mission => mission.phase === phase);
-
-      if (pool.length < amount || (role === 'voechter' && pool.length < members.length)) {
-        throw new Error(`Zu wenige ${role}-Missionen in Phase ${phase}.`);
-      }
-
-      // Eine gemischte Runde durch den Pool; erst danach neu mischen.
-      let queue = [];
-      for (const member of shuffle(members)) {
-        for (let i = 0; i < amount; i++) {
-          if (queue.length === 0) queue = shuffle(pool);
-
-          // Keine identische Mission zweimal für dieselbe Person.
-          const used = new Set(member.assignedMissions);
-          let index = queue.findIndex(mission => !used.has(mission.id));
-          if (index === -1) {
-            queue = shuffle(pool);
-            index = queue.findIndex(mission => !used.has(mission.id));
-          }
-          const [chosen] = queue.splice(index, 1);
-          member.assignedMissions.push(chosen.id);
-        }
-      }
+      const pool = MISSIONS.crew.filter(mission => mission.phase === phase);
+      member.assignedMissions.push(...shuffle(pool).map(mission => mission.id));
     }
   }
 
+  // Vöchter: pro Phase eine Pflichtmission, ohne Überschneidung der beiden.
+  const voechter = shuffle(result.filter(player => player.role === 'voechter'));
+  for (const phase of SETTINGS.phases) {
+    const pool = shuffle(MISSIONS.voechter.filter(mission => mission.phase === phase));
+    if (pool.length < voechter.length) {
+      throw new Error(`Zu wenige Vöchter-Missionen in Phase ${phase}.`);
+    }
+    voechter.forEach((member, index) => member.assignedMissions.push(pool[index].id));
+  }
   return result;
 }
 
-// Zeigt und zählt nur Missionen, die diesem Spieler zugewiesen wurden.
+// Reihenfolge aus dem persönlichen Ticket beibehalten (nicht Pool-Reihenfolge).
 function getPlayerMissions() {
   if (!state || !Array.isArray(state.assignedMissions)) return [];
-  const ids = new Set(state.assignedMissions);
-  return MISSIONS[state.role].filter(mission => ids.has(mission.id));
+  const lookup = new Map(MISSIONS[state.role].map(mission => [mission.id, mission]));
+  return state.assignedMissions.map(id => lookup.get(id)).filter(Boolean);
+}
+
+// Ältere Crew-Links mit nur sechs Missionen ergänzen wir einmalig.
+// Bereits erledigte Aufgaben und die bisherige Reihenfolge bleiben erhalten.
+function upgradeCrewMissions(ids) {
+  const result = Array.isArray(ids) ? [...new Set(ids)] : [];
+  for (const phase of SETTINGS.phases) {
+    const existing = new Set(result);
+    const missing = shuffle(MISSIONS.crew.filter(m => m.phase === phase && !existing.has(m.id)));
+    // Fehlende Aufgaben werden hinter den vorhandenen Aufgaben ihrer Phase
+    // eingefügt, damit die Phasen weiterhin korrekt sortiert sind.
+    const last = result.reduce((pos, id, i) =>
+      MISSIONS.crew.some(m => m.id === id && m.phase === phase) ? i : pos, -1);
+    if (last >= 0) result.splice(last + 1, 0, ...missing.map(m => m.id));
+    else {
+      const next = result.findIndex(id => MISSIONS.crew.some(m => m.id === id && m.phase > phase));
+      result.splice(next < 0 ? result.length : next, 0, ...missing.map(m => m.id));
+    }
+  }
+  return result;
 }
 
 // ============================================================================
@@ -601,7 +608,28 @@ function ticketUrl(player) {
   url.search = ''; url.hash = 'ticket=' + encodeTicket(ticket);
   return url.toString();
 }
+function ensureHostMissions() {
+  if (!hostData || !Array.isArray(hostData.players)) return;
+  // Bestehende Spielrunden aus der alten Version hatten noch keine Zuteilung.
+  // Bei der ersten erneuten Anzeige der Links einmalig für alle verteilen.
+  if (hostData.players.some(p => !Array.isArray(p.assignedMissions))) {
+    hostData.players = assignMissionsToPlayers(hostData.players);
+    saveHost();
+  }
+  // Bereits angelegte Crew-Tickets einmalig auf den vollen Pool erweitern.
+  let changed = false;
+  for (const player of hostData.players) {
+    if (player.role !== 'crew') continue;
+    const expanded = upgradeCrewMissions(player.assignedMissions);
+    if (expanded.length !== player.assignedMissions.length) {
+      player.assignedMissions = expanded;
+      changed = true;
+    }
+  }
+  if (changed) saveHost();
+}
 function renderTickets() {
+  ensureHostMissions();
   const list = $('ticketList'); list.replaceChildren();
   hostData.players.forEach((player, index) => {
     const box = document.createElement('div'); box.className = 'ticket';
@@ -631,7 +659,22 @@ function loadTicketFromUrl() {
   if (!match) return false;
   try {
     const ticket = decodeTicket(match[1]);
-    if (!ticket.gameId || !ticket.playerId || !['crew', 'voechter'].includes(ticket.role) || !Array.isArray(ticket.players) || !Array.isArray(ticket.assignedMissions)) throw Error('Ungültiges oder veraltetes Ticket');
+    if (!ticket.gameId || !ticket.playerId || !['crew', 'voechter'].includes(ticket.role) || !Array.isArray(ticket.players)) throw Error('Ungültiges Ticket');
+    // Alte persönliche Links enthalten keine assignedMissions. Statt sie
+    // abzulehnen, können sie mit einer lokalen Zufallsauswahl weiterlaufen.
+    // Für garantiert unterschiedliche Vöchter-Missionen bitte neue Links
+    // vom Stallmeister erzeugen lassen.
+    if (!Array.isArray(ticket.assignedMissions)) {
+      const oldState = readJson(STORAGE_KEY);
+      ticket.assignedMissions = oldState?.gameId === ticket.gameId &&
+        oldState?.playerId === ticket.playerId &&
+        Array.isArray(oldState.assignedMissions)
+        ? oldState.assignedMissions
+        : assignMissionsToPlayers([{ id: ticket.playerId, role: ticket.role }])[0].assignedMissions;
+    }
+    if (ticket.role === 'crew') {
+      ticket.assignedMissions = upgradeCrewMissions(ticket.assignedMissions);
+    }
     const existing = readJson(STORAGE_KEY);
     if (existing && existing.gameId === ticket.gameId && existing.playerId === ticket.playerId) {
       state = { ...existing, assignedMissions: ticket.assignedMissions };
@@ -643,12 +686,17 @@ function loadTicketFromUrl() {
     saveState();
     history.replaceState(null, '', location.pathname + location.search);
     return true;
-  } catch (err) { alert('Der Spielerlink konnte nicht gelesen werden. Bitte einen neuen Link beim Stallmeister anfordern.'); return false; }
+  } catch (err) { console.error('Spielerlink-Fehler:', err); alert('Der Spielerlink konnte nicht gelesen werden: ' + (err?.message || 'Unbekannter Fehler') + '. Bitte den vollständigen Link erneut öffnen.'); return false; }
 }
 function restorePlayer() {
   const stored = readJson(STORAGE_KEY);
   if (!stored || !stored.gameId || !stored.playerId || !Array.isArray(stored.assignedMissions)) return false;
-  state = stored; return true;
+  state = stored;
+  if (state.role === 'crew') {
+    state.assignedMissions = upgradeCrewMissions(state.assignedMissions);
+    saveState();
+  }
+  return true;
 }
 function renderPlayer() {
   if (!state) return;
@@ -665,7 +713,9 @@ function renderPlayer() {
   $('playerScore').textContent = isCrew ? `${points} Punkte` : `${done.length}/${missions.length} Pflicht`;
   $('phaseDescription').textContent = state.phase === 4
     ? '🏁 Das Finale läuft. Missionen können nicht mehr abgeschlossen werden.'
-    : `Phase ${state.phase} läuft. Alle Aufgaben bis einschließlich Phase ${state.phase} sind freigeschaltet.`;
+    : isCrew
+      ? `Phase ${state.phase} läuft. Du siehst immer nur die nächste offene Mission. Unerledigte Aufgaben aus früheren Phasen verfallen beim Phasenwechsel.`
+      : `Phase ${state.phase} läuft. Alle Aufgaben bis einschließlich Phase ${state.phase} sind freigeschaltet.`;
   $('phase2Btn').disabled = state.phase >= 2;
   $('phase3Btn').disabled = state.phase >= 3;
   $('finalBtn').disabled = state.phase === 4;
@@ -675,20 +725,51 @@ function renderPlayer() {
 }
 function renderMissions() {
   const list = $('missionList'); list.replaceChildren();
-  getPlayerMissions().forEach(mission => {
+  const missions = getPlayerMissions();
+
+  if (state.role === 'crew') {
+    // Nur EINE offene Mission der AKTUELLEN Phase anzeigen.
+    // Unerledigte Aufgaben früherer Phasen werden nicht mehr angeboten.
+    const next = missions.find(mission =>
+      mission.phase === state.phase && !state.done.includes(mission.id));
+    const currentPhaseMissions = missions.filter(mission => mission.phase === state.phase);
+    const completed = currentPhaseMissions.filter(mission => state.done.includes(mission.id)).length;
+    addText(list, 'p', `Phase ${state.phase}: ${completed} von ${currentPhaseMissions.length} Missionen erledigt. Es wird immer nur eine aktuelle Aufgabe angezeigt.`, 'small');
+
+    if (!next) {
+      const hasLocked = missions.some(mission => mission.phase > state.phase);
+      addText(list, 'p', hasLocked
+        ? '🎉 Alle Missionen dieser Phase geschafft! Warte auf die nächste Phase.'
+        : '🏆 Alle Missionen geschafft! Warte auf das Finale.');
+      return;
+    }
+
+    const box = document.createElement('div'); box.className = 'mission';
+    addText(box, 'span', `Phase ${next.phase} · ${next.points} Punkte`, 'tag');
+    addText(box, 'p', next.text);
+    box.appendChild(makeButton('✓ Mission erledigt – nächste anzeigen', () => {
+      // Auch bei verspäteten Klicks nur Aufgaben der aktuell aktiven Phase akzeptieren.
+      if (state.phase !== next.phase || state.done.includes(next.id)) return;
+      state.done.push(next.id);
+      saveState(); renderPlayer();
+    }, ''));
+    list.appendChild(box);
+    return;
+  }
+
+  // Vöchter behalten ihre drei individuell zugelosten Pflichtmissionen.
+  missions.forEach(mission => {
     const available = mission.phase <= state.phase;
     const completed = state.done.includes(mission.id);
     const box = document.createElement('div'); box.className = 'mission' + (completed ? ' done' : '');
-    const title = state.role === 'crew' ? `Phase ${mission.phase} · ${mission.points} Punkte` : `Phase ${mission.phase} · Pflichtmission`;
-    addText(box, 'span', title, 'tag');
+    addText(box, 'span', `Phase ${mission.phase} · Pflichtmission`, 'tag');
     addText(box, 'p', available ? mission.text : '🔒 Diese geheime Mission wird erst in Phase ' + mission.phase + ' enthüllt.');
     if (available) {
-      const btn = makeButton(completed ? '✓ Erledigt – zurücknehmen' : '✓ Mission erledigt', () => {
+      box.appendChild(makeButton(completed ? '✓ Erledigt – zurücknehmen' : '✓ Mission erledigt', () => {
         if (state.done.includes(mission.id)) state.done = state.done.filter(id => id !== mission.id);
         else state.done.push(mission.id);
         saveState(); renderPlayer();
-      }, completed ? 'secondary' : '');
-      box.appendChild(btn);
+      }, completed ? 'secondary' : ''));
     }
     list.appendChild(box);
   });
