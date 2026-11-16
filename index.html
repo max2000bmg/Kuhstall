@@ -100,375 +100,169 @@ const SETTINGS = {
 // Darum sollten ihre Aufgaben machbar und klar überprüfbar sein.
 // Bei jeder Rolle kannst du einfach weitere Zeilen im gleichen Format ergänzen.
 const MISSIONS = {
-
-  // ==========================================================
-  // 🐮 INKOMPETENZTEAM
-  // ==========================================================
-  // Jeder Spieler soll später pro Phase 2 zufällige
-  // Missionen aus diesem Pool erhalten.
-  //
-  // points = Punkte für die persönliche Rangliste.
-  // phase  = 1, 2 oder 3.
-  // id     = Muss für jede Mission eindeutig sein.
-  // ==========================================================
-
   crew: [
+    // PHASE 1 – GESPRÄCHE UND ERSTE ENTDECKUNGEN
+    { id: "c01", phase: 1, points: 10, text: "Bringe jemanden dazu, eine lustige Geschichte von einer früheren Kuhstall-Feier zu erzählen." },
+    { id: "c02", phase: 1, points: 10, text: "Lass dir von einem anderen Gast einen neuen Kuhstall-Spitznamen geben." },
+    { id: "c03", phase: 1, points: 10, text: "Bringe jemanden dazu, dir sein Lieblings-Metallschild an der Wand zu zeigen." },
+    { id: "c04", phase: 1, points: 10, text: "Finde jemanden, der behauptet, besser Dart spielen zu können als du." },
+    { id: "c05", phase: 1, points: 10, text: "Bringe jemanden dazu, dir zu erzählen, welche alte Spielkonsole seine Lieblingskonsole war." },
+    { id: "c06", phase: 1, points: 10, text: "Lass dir von jemandem erklären, welches Getränk aus dem Kühlschrank er am liebsten mag." },
+    { id: "c07", phase: 1, points: 10, text: "Bringe jemanden dazu, das Wort Inkompetenz in einem normalen Gespräch auszusprechen." },
+    { id: "c08", phase: 1, points: 10, text: "Finde heraus, welcher Gast schon einmal eine besonders peinliche Kirmesgeschichte erlebt hat." },
+    { id: "c09", phase: 1, points: 10, text: "Sorge dafür, dass jemand freiwillig einen Blick in das Konsolenregal wirft." },
+    { id: "c10", phase: 1, points: 10, text: "Bringe jemanden dazu, den alten Hängeschrank ausdrücklich zu erwähnen." },
+    { id: "c11", phase: 1, points: 10, text: "Lass jemanden entscheiden, ob er lieber an der Theke oder an der Dartscheibe stehen würde." },
+    { id: "c12", phase: 1, points: 10, text: "Bringe jemanden dazu, dir zu erzählen, welches Videospiel er früher am häufigsten gespielt hat." },
 
-    // --------------------------------------------------------
-    // PHASE 1 – UNAUFFÄLLIGER EINSTIEG
-    // --------------------------------------------------------
+    // PHASE 1 – 3D-DRUCK-OBJEKTE NUR SUCHEN
+    { id: "c37", phase: 1, points: 10, text: "Finde die Goldene Kuh und merke dir ihren Fundort. Nicht bewegen." },
+    { id: "c38", phase: 1, points: 10, text: "Finde den orangefarbenen Vöchter-Fuchs. Lasse ihn liegen." },
+    { id: "c39", phase: 1, points: 10, text: "Finde den blauen Stallmeister-Schlüssel. Nicht bewegen." },
+    { id: "c40", phase: 1, points: 10, text: "Finde eine Kuhmünze und merke dir ihren Fundort." },
+    { id: "c41", phase: 1, points: 10, text: "Finde eine Fuchsmünze und merke dir ihren Fundort." },
+    { id: "c42", phase: 1, points: 10, text: "Finde eine Schlüsselmünze und merke dir ihren Fundort." },
+    { id: "c43", phase: 1, points: 10, text: "Finde die Mondmünze. Sie bleibt an ihrem Platz." },
+    { id: "c44", phase: 1, points: 10, text: "Finde die Sternmünze. Sie bleibt an ihrem Platz." },
+    { id: "c45", phase: 1, points: 10, text: "Finde die kleine Schweinefigur und merke dir, wo sie steht." },
+    { id: "c46", phase: 1, points: 10, text: "Finde die kleine Hufeisenfigur. Nicht bewegen." },
+    { id: "c47", phase: 1, points: 10, text: "Finde zwei Münzen mit unterschiedlichen Symbolen. Lasse beide liegen." },
+    { id: "c48", phase: 1, points: 10, text: "Finde drei verschiedene gedruckte Figuren oder Münzen und merke dir ihre Fundorte." },
 
-    {
-      id: 'c01',
-      phase: 1,
-      points: 10,
-      text: 'Bringe jemanden dazu, eine lustige Geschichte von einer früheren Kuhstall-Feier zu erzählen.'
-    },
-    {
-      id: 'c02',
-      phase: 1,
-      points: 10,
-      text: 'Lass dir von einem anderen Gast einen neuen Kuhstall-Spitznamen geben.'
-    },
-    {
-      id: 'c03',
-      phase: 1,
-      points: 10,
-      text: 'Bringe jemanden dazu, dir sein Lieblings-Metallschild an der Wand zu zeigen.'
-    },
-    {
-      id: 'c04',
-      phase: 1,
-      points: 10,
-      text: 'Finde jemanden, der behauptet, besser Dart spielen zu können als du.'
-    },
-    {
-      id: 'c05',
-      phase: 1,
-      points: 10,
-      text: 'Bringe jemanden dazu, dir zu erzählen, welche alte Spielkonsole seine Lieblingskonsole war.'
-    },
-    {
-      id: 'c06',
-      phase: 1,
-      points: 10,
-      text: 'Lass dir von jemandem erklären, welches Getränk aus dem Kühlschrank er am liebsten mag.'
-    },
-    {
-      id: 'c07',
-      phase: 1,
-      points: 10,
-      text: 'Bringe jemanden dazu, das Wort „Inkompetenz“ in einem normalen Gespräch auszusprechen.'
-    },
-    {
-      id: 'c08',
-      phase: 1,
-      points: 10,
-      text: 'Finde heraus, welcher Gast schon einmal eine besonders peinliche Kirmesgeschichte erlebt hat.'
-    },
-    {
-      id: 'c09',
-      phase: 1,
-      points: 10,
-      text: 'Sorge dafür, dass jemand freiwillig einen Blick in das Konsolenregal wirft.'
-    },
-    {
-      id: 'c10',
-      phase: 1,
-      points: 10,
-      text: 'Bringe jemanden dazu, den alten Hängeschrank ausdrücklich zu erwähnen.'
-    },
-    {
-      id: 'c11',
-      phase: 1,
-      points: 10,
-      text: 'Lass jemanden entscheiden, ob er lieber an der Theke oder an der Dartscheibe stehen würde.'
-    },
-    {
-      id: 'c12',
-      phase: 1,
-      points: 10,
-      text: 'Bringe jemanden dazu, dir zu erzählen, welches Videospiel er früher am häufigsten gespielt hat.'
-    },
+    // PHASE 2 – SOZIALE MISSIONEN
+    { id: "c13", phase: 2, points: 15, text: "Überzeuge jemanden, mit dir eine Runde Dart zu spielen, sofern die Dartscheibe frei ist." },
+    { id: "c14", phase: 2, points: 15, text: "Bringe zwei andere Gäste dazu, über PlayStation gegen Nintendo zu diskutieren." },
+    { id: "c15", phase: 2, points: 15, text: "Sorge dafür, dass jemand ein Metallschild an der Wand laut vorliest." },
+    { id: "c16", phase: 2, points: 15, text: "Bringe jemanden dazu, den Spieleautomaten genauer zu betrachten." },
+    { id: "c17", phase: 2, points: 15, text: "Lass dir von jemandem erklären, wie er den Kuhstall umgestalten würde." },
+    { id: "c18", phase: 2, points: 15, text: "Überzeuge jemanden, dir einen besonders schlechten Witz zu erzählen." },
+    { id: "c19", phase: 2, points: 15, text: "Bringe zwei Gäste dazu, gemeinsam einen Namen für eine neue Kuhstall-Kirmesattraktion zu erfinden." },
+    { id: "c20", phase: 2, points: 15, text: "Sorge dafür, dass jemand freiwillig den gefliesten Innenraum des alten Hängeschranks betrachtet, ohne etwas darin zu verändern." },
+    { id: "c21", phase: 2, points: 15, text: "Bringe jemanden dazu, die Frage zu beantworten, ob der Kuhstall oder die Vöchter Kirmes die bessere Party veranstaltet." },
+    { id: "c22", phase: 2, points: 15, text: "Lass dir von jemandem erklären, warum die Garderobe an ihrem aktuellen Platz gut oder schlecht aufgehoben ist." },
+    { id: "c23", phase: 2, points: 15, text: "Überzeuge jemanden, dir seinen besten Tipp für einen Dart-Anfänger zu geben." },
+    { id: "c24", phase: 2, points: 15, text: "Bringe mindestens zwei Gäste dazu, sich auf das beste alte Konsolenspiel zu einigen." },
 
-    // --------------------------------------------------------
-    // PHASE 2 – MEHR INTERAKTION UND ERSTE VERDÄCHTIGUNGEN
-    // --------------------------------------------------------
+    // PHASE 2 – MIT OBJEKTEN INTERAGIEREN
+    { id: "c49", phase: 2, points: 15, text: "Versetze die Goldene Kuh an einen anderen gut sichtbaren, sicheren Platz im Kuhstall." },
+    { id: "c50", phase: 2, points: 15, text: "Bitte einen anderen Gast, dir den blauen Stallmeister-Schlüssel zu bringen. Lege ihn danach sichtbar ab." },
+    { id: "c51", phase: 2, points: 15, text: "Versetze den Vöchter-Fuchs an einen anderen gut sichtbaren, sicheren Platz." },
+    { id: "c52", phase: 2, points: 15, text: "Übergib einem Gast eine Kuhmünze und bitte ihn, sie sichtbar an einem anderen Platz abzulegen." },
+    { id: "c53", phase: 2, points: 15, text: "Vertausche die Fundorte einer Kuhmünze und einer Schlüsselmünze." },
+    { id: "c54", phase: 2, points: 15, text: "Gib den blauen Schlüssel einem Gast und bitte ihn, ihn gut sichtbar abzulegen." },
+    { id: "c55", phase: 2, points: 15, text: "Bringe einen Gast dazu, die Mondmünze zu finden, ohne ihren Fundort zu verraten." },
+    { id: "c56", phase: 2, points: 15, text: "Übergib einem Gast eine Fuchsmünze und bitte ihn, sie sichtbar abzulegen." },
+    { id: "c57", phase: 2, points: 15, text: "Bringe zwei Gäste dazu, gemeinsam den aktuellen Standort der Goldenen Kuh herauszufinden." },
+    { id: "c58", phase: 2, points: 15, text: "Finde Mond- und Sternmünze und merke dir, ob sie noch am ursprünglichen Platz liegen." },
+    { id: "c59", phase: 2, points: 15, text: "Frage einen Gast, ob er den Vöchter-Fuchs bereits bewegt hat." },
+    { id: "c60", phase: 2, points: 15, text: "Vertausche die Fundorte zweier unterschiedlicher, frei zugänglicher Symbolmünzen." },
 
-    {
-      id: 'c13',
-      phase: 2,
-      points: 15,
-      text: 'Überzeuge jemanden, mit dir eine Runde Dart zu spielen, sofern die Dartscheibe frei ist.'
-    },
-    {
-      id: 'c14',
-      phase: 2,
-      points: 15,
-      text: 'Bringe zwei andere Gäste dazu, über PlayStation gegen Nintendo zu diskutieren.'
-    },
-    {
-      id: 'c15',
-      phase: 2,
-      points: 15,
-      text: 'Sorge dafür, dass jemand ein Metallschild an der Wand laut vorliest.'
-    },
-    {
-      id: 'c16',
-      phase: 2,
-      points: 15,
-      text: 'Bringe jemanden dazu, den Spieleautomaten genauer zu betrachten.'
-    },
-    {
-      id: 'c17',
-      phase: 2,
-      points: 15,
-      text: 'Lass dir von jemandem erklären, wie er den Kuhstall umgestalten würde.'
-    },
-    {
-      id: 'c18',
-      phase: 2,
-      points: 15,
-      text: 'Überzeuge jemanden, dir einen besonders schlechten Witz zu erzählen.'
-    },
-    {
-      id: 'c19',
-      phase: 2,
-      points: 15,
-      text: 'Bringe zwei Gäste dazu, gemeinsam einen Namen für eine neue Kuhstall-Kirmesattraktion zu erfinden.'
-    },
-    {
-      id: 'c20',
-      phase: 2,
-      points: 15,
-      text: 'Sorge dafür, dass jemand freiwillig den gefliesten Innenraum des alten Hängeschranks betrachtet, ohne etwas darin zu verändern.'
-    },
-    {
-      id: 'c21',
-      phase: 2,
-      points: 15,
-      text: 'Bringe jemanden dazu, die Frage zu beantworten, ob der Kuhstall oder die Vöchter Kirmes die bessere Party veranstaltet.'
-    },
-    {
-      id: 'c22',
-      phase: 2,
-      points: 15,
-      text: 'Lass dir von jemandem erklären, warum die Garderobe an ihrem aktuellen Platz gut oder schlecht aufgehoben ist.'
-    },
-    {
-      id: 'c23',
-      phase: 2,
-      points: 15,
-      text: 'Überzeuge jemanden, dir seinen besten Tipp für einen Dart-Anfänger zu geben.'
-    },
-    {
-      id: 'c24',
-      phase: 2,
-      points: 15,
-      text: 'Bringe mindestens zwei Gäste dazu, sich auf das beste alte Konsolenspiel zu einigen.'
-    },
+    // PHASE 3 – SOZIALE MISSIONEN
+    { id: "c25", phase: 3, points: 20, text: "Bringe mindestens drei Gäste dazu, gemeinsam einen Kuhstall-Schlachtruf zu erfinden." },
+    { id: "c26", phase: 3, points: 20, text: "Überzeuge zwei Gäste, dir jeweils einen Verdächtigen für die Vöchter-Rolle zu nennen." },
+    { id: "c27", phase: 3, points: 20, text: "Bringe jemanden dazu, vor mindestens zwei anderen Gästen eine kurze Lobrede auf den Kuhstall zu halten." },
+    { id: "c28", phase: 3, points: 20, text: "Sorge dafür, dass mindestens drei Personen über den größten Kuhstall-Skandal diskutieren, den sie sich vorstellen können." },
+    { id: "c29", phase: 3, points: 20, text: "Bringe zwei Gäste dazu, sich gegenseitig einen Kuhstall-Spitznamen zu geben." },
+    { id: "c30", phase: 3, points: 20, text: "Überzeuge jemanden, einen anderen Gast zu einem freiwilligen Dart-Duell herauszufordern." },
+    { id: "c31", phase: 3, points: 20, text: "Bringe jemanden dazu, zu erklären, welches der Metallschilder am besten zur Kuhstall-Jubiläumsfeier passt." },
+    { id: "c32", phase: 3, points: 20, text: "Sorge dafür, dass mindestens drei Gäste gemeinsam ein neues Motto für den Kuhstall vorschlagen." },
+    { id: "c33", phase: 3, points: 20, text: "Bringe jemanden dazu, eine Theorie aufzustellen, warum die Vöchter den Kuhstall sabotieren wollen." },
+    { id: "c34", phase: 3, points: 20, text: "Überzeuge zwei Gäste, sich auf die beste Attraktion einer perfekten Kirmes zu einigen." },
+    { id: "c35", phase: 3, points: 20, text: "Bringe jemanden dazu, einen anderen Gast ausdrücklich als verdächtig zu bezeichnen." },
+    { id: "c36", phase: 3, points: 20, text: "Sorge dafür, dass mindestens drei Gäste gemeinsam eine absurde neue Kuhstall-Regel erfinden." },
 
-    // --------------------------------------------------------
-    // PHASE 3 – DAS FINALE RÜCKT NÄHER
-    // --------------------------------------------------------
-
-    {
-      id: 'c25',
-      phase: 3,
-      points: 20,
-      text: 'Bringe mindestens drei Gäste dazu, gemeinsam einen Kuhstall-Schlachtruf zu erfinden.'
-    },
-    {
-      id: 'c26',
-      phase: 3,
-      points: 20,
-      text: 'Überzeuge zwei Gäste, dir jeweils einen Verdächtigen für die Vöchter-Rolle zu nennen.'
-    },
-    {
-      id: 'c27',
-      phase: 3,
-      points: 20,
-      text: 'Bringe jemanden dazu, vor mindestens zwei anderen Gästen eine kurze Lobrede auf den Kuhstall zu halten.'
-    },
-    {
-      id: 'c28',
-      phase: 3,
-      points: 20,
-      text: 'Sorge dafür, dass mindestens drei Personen über den größten Kuhstall-Skandal diskutieren, den sie sich vorstellen können.'
-    },
-    {
-      id: 'c29',
-      phase: 3,
-      points: 20,
-      text: 'Bringe zwei Gäste dazu, sich gegenseitig einen Kuhstall-Spitznamen zu geben.'
-    },
-    {
-      id: 'c30',
-      phase: 3,
-      points: 20,
-      text: 'Überzeuge jemanden, einen anderen Gast zu einem freiwilligen Dart-Duell herauszufordern.'
-    },
-    {
-      id: 'c31',
-      phase: 3,
-      points: 20,
-      text: 'Bringe jemanden dazu, zu erklären, welches der Metallschilder am besten zur Kuhstall-Jubiläumsfeier passt.'
-    },
-    {
-      id: 'c32',
-      phase: 3,
-      points: 20,
-      text: 'Sorge dafür, dass mindestens drei Gäste gemeinsam ein neues Motto für den Kuhstall vorschlagen.'
-    },
-    {
-      id: 'c33',
-      phase: 3,
-      points: 20,
-      text: 'Bringe jemanden dazu, eine Theorie aufzustellen, warum die Vöchter den Kuhstall sabotieren wollen.'
-    },
-    {
-      id: 'c34',
-      phase: 3,
-      points: 20,
-      text: 'Überzeuge zwei Gäste, sich auf die beste Attraktion einer perfekten Kirmes zu einigen.'
-    },
-    {
-      id: 'c35',
-      phase: 3,
-      points: 20,
-      text: 'Bringe jemanden dazu, einen anderen Gast ausdrücklich als „verdächtig“ zu bezeichnen.'
-    },
-    {
-      id: 'c36',
-      phase: 3,
-      points: 20,
-      text: 'Sorge dafür, dass mindestens drei Gäste gemeinsam eine absurde neue Kuhstall-Regel erfinden.'
-    }
-
+    // PHASE 3 – TÄUSCHUNG UND ARTEFAKTE
+    { id: "c61", phase: 3, points: 20, text: "Finde die Goldene Kuh und bringe einen Gast dazu, sie an einen anderen sichtbaren Platz zu stellen." },
+    { id: "c62", phase: 3, points: 20, text: "Finde den Vöchter-Fuchs und bringe zwei Gäste dazu, ihn ebenfalls zu entdecken." },
+    { id: "c63", phase: 3, points: 20, text: "Überzeuge einen Gast, eine Kuhmünze und eine Schlüsselmünze nebeneinander abzulegen." },
+    { id: "c64", phase: 3, points: 20, text: "Finde Mond- und Sternmünze und bringe einen Gast dazu, ihre Symbole zu vergleichen." },
+    { id: "c65", phase: 3, points: 20, text: "Bringe zwei Gäste dazu, den blauen Schlüssel nacheinander weiterzureichen und anschließend sichtbar abzulegen." },
+    { id: "c66", phase: 3, points: 20, text: "Bringe zwei Gäste dazu, über den aktuellen Fundort einer gedruckten Figur zu diskutieren." },
+    { id: "c67", phase: 3, points: 20, text: "Überzeuge einen Gast, zuerst an einem falschen Ort nach dem Vöchter-Fuchs zu suchen." },
+    { id: "c68", phase: 3, points: 20, text: "Bringe drei unterschiedliche Symbolmünzen an einem sichtbaren Platz zusammen." },
+    { id: "c69", phase: 3, points: 20, text: "Überzeuge einen Gast, die Plätze zweier frei zugänglicher Symbolmünzen zu tauschen." },
+    { id: "c70", phase: 3, points: 20, text: "Bringe einen Gast dazu, die Goldene Kuh zu versetzen, ohne selbst Hand anzulegen." },
+    { id: "c71", phase: 3, points: 20, text: "Bringe jemanden dazu, einen anderen Spieler nach einer auffälligen Aktion mit einer Figur zu fragen." },
+    { id: "c72", phase: 3, points: 20, text: "Finde Goldene Kuh, Vöchter-Fuchs und blauen Schlüssel und merke dir ihre aktuellen Fundorte." }
   ],
 
-  // ==========================================================
-  // 🦊 DIE BEIDEN VÖCHTER
-  // ==========================================================
-  // Jeder Vöchter soll später pro Phase 1 zufällige
-  // Pflichtmission erhalten.
-  //
-  // Beide müssen ihre jeweils 3 zugeteilten Missionen
-  // erfüllen, damit die Vöchter gewinnen können.
-  //
-  // Vöchter erhalten keine persönlichen Ranglistenpunkte.
-  // ==========================================================
-
   voechter: [
+    // PHASE 1 – UNAUFFÄLLIGE SABOTAGE
+    { id: "v01", phase: 1, text: "Bringe jemanden dazu, die Vöchter Kirmes von sich aus als Gesprächsthema aufzugreifen." },
+    { id: "v02", phase: 1, text: "Überzeuge jemanden, mindestens einen Grund zu nennen, warum die Vöchter Kirmes besser als der Kuhstall sein könnte." },
+    { id: "v03", phase: 1, text: "Bringe jemanden dazu, sich darüber zu beschweren, dass im Kuhstall irgendetwas verbessert werden müsste." },
+    { id: "v04", phase: 1, text: "Lass jemanden die Frage stellen, warum die Vöchter eigentlich nicht zur Kuhstall-Feier eingeladen wurden." },
+    { id: "v05", phase: 1, text: "Bringe jemanden dazu, das Wort Sabotage auszusprechen, ohne selbst dieses Wort zu verwenden." },
+    { id: "v06", phase: 1, text: "Überzeuge jemanden davon, dass auf einer richtigen Kirmes mehr los ist als im Kuhstall." },
 
-    // --------------------------------------------------------
-    // PHASE 1 – VERDECKTE STICHELEIEN
-    // --------------------------------------------------------
+    // PHASE 1 – OBJEKTE SUCHEN, NICHT BEWEGEN
+    { id: "v19", phase: 1, text: "Finde den Vöchter-Fuchs und bringe einen Gast dazu, ihn ebenfalls zu suchen. Nicht bewegen." },
+    { id: "v20", phase: 1, text: "Finde die Goldene Kuh und lenke das Interesse eines Gastes auf eine andere Figur." },
+    { id: "v21", phase: 1, text: "Finde die Schweinefigur und bringe einen Gast dazu, sie zu entdecken." },
+    { id: "v22", phase: 1, text: "Finde den blauen Schlüssel und bringe jemanden dazu, über seinen Zweck zu spekulieren." },
+    { id: "v23", phase: 1, text: "Finde eine Fuchsmünze und beobachte, ob jemand anderes sie entdeckt." },
+    { id: "v24", phase: 1, text: "Finde zwei verschiedene gedruckte Objekte und erzähle einem Gast, dass sie zusammengehören könnten." },
 
-    {
-      id: 'v01',
-      phase: 1,
-      text: 'Bringe jemanden dazu, die Vöchter Kirmes von sich aus als Gesprächsthema aufzugreifen.'
-    },
-    {
-      id: 'v02',
-      phase: 1,
-      text: 'Überzeuge jemanden, mindestens einen Grund zu nennen, warum die Vöchter Kirmes besser als der Kuhstall sein könnte.'
-    },
-    {
-      id: 'v03',
-      phase: 1,
-      text: 'Bringe jemanden dazu, sich darüber zu beschweren, dass im Kuhstall irgendetwas verbessert werden müsste.'
-    },
-    {
-      id: 'v04',
-      phase: 1,
-      text: 'Lass jemanden die Frage stellen, warum die Vöchter eigentlich nicht zur Kuhstall-Feier eingeladen wurden.'
-    },
-    {
-      id: 'v05',
-      phase: 1,
-      text: 'Bringe jemanden dazu, das Wort „Sabotage“ auszusprechen, ohne selbst dieses Wort zu verwenden.'
-    },
-    {
-      id: 'v06',
-      phase: 1,
-      text: 'Überzeuge jemanden davon, dass auf einer richtigen Kirmes mehr los ist als im Kuhstall.'
-    },
+    // PHASE 2 – SABOTAGE UND GEHEIMES KENNENLERNEN
+    { id: "v07", phase: 2, text: "Bringe jemanden dazu, vor einem weiteren Gast laut zu behaupten, dass die Vöchter Kirmes die bessere Veranstaltung sei." },
+    { id: "v08", phase: 2, text: "Sorge dafür, dass zwei Gäste darüber diskutieren, ob der Kuhstall einen neuen Namen braucht." },
+    { id: "v09", phase: 2, text: "Bringe jemanden dazu, den Spieleautomaten als mögliche Hauptattraktion einer Vöchter Kirmes vorzuschlagen." },
+    { id: "v10", phase: 2, text: "Überzeuge jemanden, mindestens zwei Dinge aufzuzählen, die bei einer Kirmes besser funktionieren als bei einer Kuhstall-Feier." },
+    { id: "v11", phase: 2, text: "Sorge dafür, dass jemand ernsthaft oder scherzhaft vorschlägt, ein Metallschild mit Werbung für die Vöchter Kirmes aufzuhängen." },
+    { id: "v12", phase: 2, text: "Bringe jemanden dazu, vor mindestens einem weiteren Gast zu behaupten, dass die Kuhstall-Crew inkompetent sei." },
 
-    // --------------------------------------------------------
-    // PHASE 2 – DIE SABOTAGE WIRD DEUTLICHER
-    // --------------------------------------------------------
+    // PHASE 2 – OBJEKTMISSIONEN
+    { id: "v25", phase: 2, text: "Versetze den Vöchter-Fuchs unauffällig an einen anderen sicheren, sichtbaren Platz." },
+    { id: "v26", phase: 2, text: "Bringe einen Gast dazu, die Goldene Kuh an einen anderen sicheren, sichtbaren Platz zu tragen." },
+    { id: "v27", phase: 2, text: "Lege eine Fuchsmünze heimlich direkt neben die Goldene Kuh." },
+    { id: "v28", phase: 2, text: "Versetze den blauen Stallmeister-Schlüssel unauffällig an einen anderen sichtbaren Platz." },
+    { id: "v29", phase: 2, text: "Bringe einen Gast dazu, eine Fuchsmünze für dich zu transportieren." },
+    { id: "v30", phase: 2, text: "Sorge dafür, dass beide Fuchsmünzen sichtbar direkt nebeneinander liegen." },
 
-    {
-      id: 'v07',
-      phase: 2,
-      text: 'Bringe jemanden dazu, vor einem weiteren Gast laut zu behaupten, dass die Vöchter Kirmes die bessere Veranstaltung sei.'
-    },
-    {
-      id: 'v08',
-      phase: 2,
-      text: 'Sorge dafür, dass zwei Gäste darüber diskutieren, ob der Kuhstall einen neuen Namen braucht.'
-    },
-    {
-      id: 'v09',
-      phase: 2,
-      text: 'Bringe jemanden dazu, den Spieleautomaten als mögliche Hauptattraktion einer Vöchter Kirmes vorzuschlagen.'
-    },
-    {
-      id: 'v10',
-      phase: 2,
-      text: 'Überzeuge jemanden, mindestens zwei Dinge aufzuzählen, die bei einer Kirmes besser funktionieren als bei einer Kuhstall-Feier.'
-    },
-    {
-      id: 'v11',
-      phase: 2,
-      text: 'Sorge dafür, dass jemand ernsthaft oder scherzhaft vorschlägt, ein Metallschild mit Werbung für die Vöchter Kirmes aufzuhängen.'
-    },
-    {
-      id: 'v12',
-      phase: 2,
-      text: 'Bringe jemanden dazu, vor mindestens einem weiteren Gast zu behaupten, dass die Kuhstall-Crew inkompetent sei.'
-    },
+    // PHASE 3 – LETZTE SABOTAGE
+    { id: "v13", phase: 3, text: "Bringe mindestens zwei Gäste dazu, gemeinsam einen Werbespruch für die Vöchter Kirmes zu erfinden." },
+    { id: "v14", phase: 3, text: "Sorge dafür, dass jemand öffentlich vorschlägt, die nächste Feier lieber auf der Vöchter Kirmes zu veranstalten." },
+    { id: "v15", phase: 3, text: "Überzeuge zwei Gäste, sich auf mindestens einen Vorteil der Vöchter Kirmes gegenüber dem Kuhstall zu einigen." },
+    { id: "v16", phase: 3, text: "Bringe jemanden dazu, einen anderen Gast scherzhaft als möglichen Saboteur der Vöchter zu beschuldigen." },
+    { id: "v17", phase: 3, text: "Sorge dafür, dass mindestens zwei Gäste über die Frage diskutieren, ob die Vöchter Kirmes nächstes Jahr besser besucht sein wird." },
+    { id: "v18", phase: 3, text: "Bringe jemanden dazu, eine kurze, spontane Werbeansage für die Vöchter Kirmes zu machen." },
 
-    // --------------------------------------------------------
-    // PHASE 3 – DER LETZTE ANGRIFF
-    // --------------------------------------------------------
-
-    {
-      id: 'v13',
-      phase: 3,
-      text: 'Bringe mindestens zwei Gäste dazu, gemeinsam einen Werbespruch für die Vöchter Kirmes zu erfinden.'
-    },
-    {
-      id: 'v14',
-      phase: 3,
-      text: 'Sorge dafür, dass jemand öffentlich vorschlägt, die nächste Feier lieber auf der Vöchter Kirmes zu veranstalten.'
-    },
-    {
-      id: 'v15',
-      phase: 3,
-      text: 'Überzeuge zwei Gäste, sich auf mindestens einen Vorteil der Vöchter Kirmes gegenüber dem Kuhstall zu einigen.'
-    },
-    {
-      id: 'v16',
-      phase: 3,
-      text: 'Bringe jemanden dazu, einen anderen Gast scherzhaft als möglichen Saboteur der Vöchter zu beschuldigen.'
-    },
-    {
-      id: 'v17',
-      phase: 3,
-      text: 'Sorge dafür, dass mindestens zwei Gäste über die Frage diskutieren, ob die Vöchter Kirmes nächstes Jahr besser besucht sein wird.'
-    },
-    {
-      id: 'v18',
-      phase: 3,
-      text: 'Bringe jemanden dazu, eine kurze, spontane Werbeansage für die Vöchter Kirmes zu machen.'
-    }
-
+    // PHASE 3 – ARTEFAKTE UND VERDÄCHTIGUNGEN
+    { id: "v31", phase: 3, text: "Bringe einen Gast dazu, den Vöchter-Fuchs an einen anderen Platz zu transportieren, ohne ihn selbst anzufassen." },
+    { id: "v32", phase: 3, text: "Sorge dafür, dass die Goldene Kuh am Ende deiner Aktion nicht an ihrem ursprünglichen Fundort steht." },
+    { id: "v33", phase: 3, text: "Platziere eine Fuchsmünze unauffällig direkt neben dem Stallmeister-Schlüssel." },
+    { id: "v34", phase: 3, text: "Bringe zwei Gäste dazu, über einen dritten Gast als möglichen Saboteur zu sprechen." },
+    { id: "v35", phase: 3, text: "Sorge dafür, dass ein anderer Gast den blauen Schlüssel direkt neben die Schweinefigur legt." },
+    { id: "v36", phase: 3, text: "Überzeuge zwei Gäste davon, dass jemand den Vöchter-Fuchs bewegt haben könnte, ohne zu behaupten, du hättest es gesehen." }
   ]
-
 };
+
+// GEHEIMES ERKENNUNGSRITUAL DER VÖCHTER IN PHASE 2
+// Wird automatisch an jede Phase-2-Vöchter-Mission angehängt.
+
+const FUCHSBAU_RITUAL =
+  "ZUSÄTZLICH IN PHASE 2 – GEHEIMER FUCHSBUND:\n\n" +
+  "Die Mondmünze und die Sternmünze liegen seit Spielbeginn " +
+  "versteckt im Kuhstall. Ihr beiden Vöchter kennt euch nicht.\n\n" +
+  "Finde eine der beiden Münzen und halte sie zunächst bei dir. " +
+  "Beobachte, wer nach der anderen Münze sucht.\n\n" +
+  "Sprich eine verdächtige Person unauffällig an:\n" +
+  "„Ist hier noch Platz im Stall?“\n\n" +
+  "Die richtige Antwort lautet:\n" +
+  "„Für zwei Füchse immer.“\n\n" +
+  "Bestätigt eure Identität, indem ihr euch gegenseitig " +
+  "Mond- und Sternmünze zeigt. Legt beide Münzen danach " +
+  "an ihre ursprünglichen Fundorte zurück.\n\n" +
+  "Erst nach diesem Treffen UND deiner eigenen Phase-2-Mission " +
+  "darfst du die Mission als erledigt markieren.\n\n" +
+  "Verrate den Erkennungssatz niemandem sonst und " +
+  "zeige nicht deine Rollenansicht.";
+
+MISSIONS.voechter.forEach(mission => {
+  if (mission.phase === 2) {
+    mission.text += "\n\n" + FUCHSBAU_RITUAL;
+  }
+});
 
 // ============================================================================
 // 3. GRUNDLEGENDE HILFSFUNKTIONEN
