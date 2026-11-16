@@ -1,453 +1,387 @@
 <!doctype html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#10251c">
-<title>KUHSTALL: AUSBRUCH 2026</title>
-<!-- DESIGN: Farben, Abstände und Schriften -->
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Vöchter im Kuhstall · 2026</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- QR-Codes sind optional. Ohne Internet/CDN funktionieren die Spielerlinks weiterhin. -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
-<main>
-  <div class="top"><span>🐮 WICHTELN IM KUHSTALL · JUBILÄUM 2026</span><span class="pill">30 MIN</span></div>
-  <div id="app"></div>
-  <div class="foot"></div>
+<main class="wrap">
+  <header>
+    <div style="font-size:3rem">🐮 🕵️ 🦊</div>
+    <h1>Vöchter im Kuhstall</h1>
+    <div class="subtitle">Die geheime Jubiläums-Sabotage · 2026</div>
+  </header>
+
+  <section id="home" class="card">
+    <h2>🚨 Alarm im Kuhstall!</h2>
+    <p class="intro">Seit Jahren ist der Kuhstall der heimliche Mittelpunkt jeder guten Feier. Doch das können die <strong>Vöchter</strong> nicht länger mit ansehen: Ihre eigene Kirmes soll endlich wieder besser besucht werden! Also haben sich zwei von ihnen undercover unter die Gäste gemischt. Ihr finsterer Plan: mit hinterhältigen Mini-Sabotagen den Kuhstall so aus dem Takt bringen, dass nächstes Jahr alle lieber zur Vöchter Kirmes pilgern.</p>
+    <p class="intro">Zum Glück steht das legendäre <strong>Inkompetenzteam</strong> bereit. Es ist zwar nicht unbedingt kompetent – aber hoch motiviert, Punkte zu sammeln und die beiden Vöchter zu entlarven. Wer sabotiert hier? Und wer ist einfach nur so?</p>
+    <div class="notice"><strong>Das Ziel:</strong> Nach dem Finale tippt jeder auf zwei Vöchter. Die Vöchter gewinnen nur, wenn <strong>beide alle ihre Pflichtmissionen</strong> geschafft haben und <strong>mindestens einer nicht enttarnt</strong> wird. Sonst gewinnt das Inkompetenzteam. Zusätzlich gewinnt das punktbeste Teammitglied die persönliche Inkompetenz-Meisterschaft.</div>
+    <div class="row topline"><button id="newGameBtn">🎩 Spiel vorbereiten</button><button id="resumeBtn" class="secondary hidden">▶ Mein Spiel fortsetzen</button></div>
+    <details class="topline"><summary>Kurzanleitung und Fairplay</summary><p>5–10 Personen, davon immer genau 2 Vöchter. Alle benutzen ein eigenes Handy. Der Stallmeister verteilt zu Beginn persönliche Links/QR-Codes. Alle drücken auf Ansage gemeinsam die Phasenbuttons: Start, Phase 2, Phase 3, Finale. Es gibt keinen automatischen Timer und keine Live-Synchronisation.</p><p>Missionen dürfen niemanden bedrängen oder bloßstellen. Keine fremden privaten Gegenstände, keine Pflicht zu Alkohol oder Fotos. Eine Mission zählt nur, wenn sie tatsächlich erledigt wurde.</p></details>
+  </section>
+
+  <section id="setup" class="card hidden">
+    <h2>🎩 Spiel vorbereiten</h2>
+    <p>Einmalig am Stallmeister-Handy Namen eingeben. Die Webseite verteilt zufällig genau zwei Vöchter. Die persönlichen Zugangslinks danach einzeln weitergeben.</p>
+    <label for="namesInput">Spielernamen (jeweils eine Zeile)</label>
+    <textarea id="namesInput" rows="9" placeholder="Anna&#10;Ben&#10;Clara&#10;David&#10;Emma"></textarea>
+    <div class="row topline"><button id="generateBtn">Rollen auslosen und Links erstellen</button><button id="backBtn" class="secondary">Zurück</button></div>
+    <p id="setupError" class="error" aria-live="polite"></p>
+  </section>
+
+  <section id="tickets" class="card hidden">
+    <h2>🎟️ Geheime Spielerzugänge</h2>
+    <div class="notice">Jeder bekommt <strong>nur seinen eigenen Link/QR-Code</strong>. Bitte nicht gemeinsam auf einem Bildschirm alle Zugänge öffnen. Die Links enthalten geheime Rolleninformationen – nicht öffentlich teilen!</div>
+    <div id="ticketList"></div>
+    <button id="openOwnBtn" class="secondary">Eigener Link bereits geöffnet? Zur Startseite</button>
+  </section>
+
+  <section id="player" class="hidden">
+    <div class="card">
+      <div class="row between"><div><span class="tag" id="playerRole">Rolle</span><h2 id="playerName" style="margin-top:10px"></h2></div><div class="score" id="playerScore">0 Punkte</div></div>
+      <p id="roleDescription"></p>
+      <div class="notice" id="phaseDescription"></div>
+      <div class="row topline"><button id="phase2Btn" class="secondary">⏩ Phase 2 starten</button><button id="phase3Btn" class="secondary">⏩ Phase 3 starten</button><button id="finalBtn" class="danger">🏁 Finale starten</button></div>
+      <p class="small">Nur auf Ansage des Stallmeisters drücken. Ein Vorwärtssprung ist jederzeit möglich; bereits erledigte Aufgaben bleiben erhalten.</p>
+    </div>
+    <div id="missionPanel" class="card"><h2>📋 Meine Missionen</h2><div id="missionList"></div></div>
+    <div id="finalPanel" class="card hidden">
+      <h2>🕵️ Wer sind die beiden Vöchter?</h2>
+      <p>Wähle <strong>genau zwei unterschiedliche Personen</strong>. Deine Tipps werden nur auf deinem Gerät gespeichert. Zeige das Ergebnis anschließend dem Stallmeister zur Auszählung.</p>
+      <label for="guess1">Verdacht 1</label><select id="guess1"></select>
+      <label for="guess2">Verdacht 2</label><select id="guess2"></select>
+      <div class="row topline"><button id="saveVoteBtn">Meine Tipps festhalten</button></div>
+      <p id="voteMessage" aria-live="polite"></p>
+      <div id="receipt" class="hidden notice"></div>
+      <div id="voterSummary" class="topline"></div>
+    </div>
+  </section>
+
+  <section id="hostResults" class="card hidden">
+    <h2>🏆 Stallmeister-Auswertung</h2>
+    <p>Die Abstimmung und Punktestände werden ohne Backend <strong>nicht automatisch zwischen Handys übertragen</strong>. Trage hier die beiden Kandidaten mit den meisten Stimmen und die Ergebnisse der Vöchter ein.</p>
+    <div id="hostFields"></div>
+    <button id="evaluateBtn">Sieger berechnen</button>
+    <div id="evaluation" class="topline"></div>
+    <details class="topline"><summary>Inkompetenz-Meisterschaft auswerten</summary><p>Trage die Punkte der Teammitglieder ein, wie sie auf deren Handys angezeigt werden.</p><div id="crewScores"></div><button id="rankBtn" class="secondary">Rangliste berechnen</button><div id="ranking"></div></details>
+  </section>
+  <footer>Vöchter im Kuhstall 2026 · Statisch auf GitHub Pages · Ohne Backend</footer>
 </main>
-<div id="toast"></div>
-
-<!-- QR-Code-Bibliothek: Wird über das Internet geladen. -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
 <script>
-/*
-============================================================
-🐮 KUHSTALL – HIER ÄNDERST DU DIE MISSIONEN
-============================================================
-1. Suche unten nach "cow:" für Stallbewohner,
-   "detective:" für Detektive oder "virus:" für Patient Null.
-2. Neue Mission: ['Mein neuer Auftrag', 100],
-3. Zwischen Einträgen muss ein Komma stehen.
-4. Datei speichern und auf GitHub hochladen.
-
-Die Punkte werden bereits automatisch pro Spieler auf dessen
-Handy gespeichert. Es gibt keine gemeinsame Online-Rangliste.
-============================================================
-*/
-// 🐮 HIER KANNST DU DIE SPIELINHALTE ÄNDERN.
-// Alles zwischen Anführungszeichen ist der Missionstext.
-// Die Zahl dahinter sind die Kuhpunkte.
-// Wichtig: Zwischen zwei Missionen steht ein Komma.
-// Die letzte Mission einer Liste braucht kein Komma.
-//
-// Beispiel für eine zusätzliche Mission:
-// ['Bringe jemanden dazu, laut MUH zu rufen.', 100],
-//
-// cow = Stallbewohner, detective = Detektiv, virus = Infizierte.
-const tasks={
-    // 🐮 Missionen der Stallbewohner
-    cow: [
-        ['Erfinde mit jemandem einen neuen Kuhstall-Spitznamen.',75],
-        ['Bring jemanden dazu, freiwillig „Euter“ in einem Satz zu sagen.',100],
-        ['Überzeuge zwei Personen, für 30 Sekunden nur im Dialekt zu sprechen.',125],
-        ['Finde jemanden, der mit dir einen 10-Sekunden-Stallschlager singt.',100],
-        ['Erhalte von drei Leuten ein High Five.',75],
-        ['Lass dir einen absurden Kuhwitz erzählen.',75],
-        ['Sammle drei unterschiedliche Kuhstall-Geräusche.',100],
-        ['Bring eine Person dazu, einen Traktor pantomimisch darzustellen.',100]
-    ],
-    // 🕵️ Missionen der Detektive
-    detective: [
-        ['Frage drei Personen, wen sie für verdächtig halten.',100],
-        ['Notiere dir zwei auffällige Gesprächssituationen.',75],
-        ['Finde jemanden, der sich auffällig für QR-Codes interessiert.',75],
-        ['Lass dir von zwei Personen ein Alibi für die letzten Minuten geben.',100],
-        ['Bringe jemanden dazu, seine eigene Unschuld zu verteidigen.',100],
-        ['Sammle drei verschiedene Verdächtigungen.',100]
-    ],
-    // 🦠 Missionen von Patient Null und Infizierten
-    virus: [
-        ['Bringe eine Person dazu, mit dir „Auf den Kuhstall!“ zu sagen.',100],
-        ['Lass dir freiwillig einen neuen Kuhnamen geben.',100],
-        ['Überzeuge jemanden, mit dir einen Kuhstall-Handshake zu machen.',100],
-        ['Bring jemanden dazu, vor dir ein Kuhgeräusch nachzumachen.',100],
-        ['Lass jemanden mit dir gemeinsam einen 5-Sekunden-Schlachtruf rufen.',125],
-        ['Bringe jemanden dazu, dir ein High Five zu geben.',75]
-    ]
-};
-// 🏅 Olympiade-Aufgaben (Name, Beschreibung)
-const olympics = [
-    ['MUH-BATTLE','Fordere eine Person heraus. Wer macht das überzeugendste Kuhgeräusch? Die Umstehenden entscheiden.'],
-    ['STALL-PANTOMIME','Stelle einen Traktor dar, ohne zu sprechen. Jemand muss ihn erraten.'],
-    ['WERBESPOT','Erfindet zu zweit eine 15-Sekunden-Werbung für einen imaginären Kuhstall-Energydrink.'],
-    ['STALL-HYMNE','Komponiere mit zwei anderen einen 10-Sekunden-Schlachtruf.'],
-    ['KÜHE IN ZEITLUPE','Fordere jemanden zu einem 15-Sekunden-Zeitlupen-Kuhgang heraus.']
-];
-// Diese Zuordnung hält die Missionslisten für die Spiellogik bereit.
-window.KUHSTALL_INHALTE = {
-    tasks,
-    olympics 
-};
-/*
-============================================================
-🔒 SPIELLOGIK – AB HIER NORMALERWEISE NICHT BEARBEITEN
-============================================================
-*/
 'use strict';
-const $=s=>document.querySelector(s),
-app=$('#app'),
-KEY='kuhstall2026-player',
-HOST='kuhstall2026-host';
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-}[c]));
-const pack=o=>{
-    const bytes=new TextEncoder().encode(JSON.stringify(o));
-    let b='';
-    bytes.forEach(x=>b+=String.fromCharCode(x));
-    return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')
-};
-const unpack=s=>{
-    const b=atob(s.replace(/-/g,'+').replace(/_/g,'/')+'='.repeat((4-s.length%4)%4));
-    return JSON.parse(new TextDecoder().decode(Uint8Array.from(b,c=>c.charCodeAt(0))))
-};
-const get=(k)=>{
-    try{
-        return JSON.parse(localStorage.getItem(k))
-    }catch{
-        return null
-    }
-},
-save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-const toast=s=>{
-    let e=$('#toast');
-    e.textContent=s;
-    e.style.display='block';
-    setTimeout(()=>e.style.display='none',2600)
-};
-const roles={
-    cow:{
-        label:'STALLBEWOHNER',
-        icon:'🐮',
-        desc:'Erledige Missionen und finde die ursprünglichen Infizierten.'
-    },
-    detective:{
-        label:'STALL-DETEKTIV',
-        icon:'🕵️',
-        desc:'Beobachte auffällige Spieler und enttarne Patient Null.'
-    },
-    virus:{
-        label:'PATIENT NULL',
-        icon:'🦠',
-        desc:'Du startest infiziert. Erfülle Infektionsmissionen und verbreite den MUH-Virus.'
-    }
-};
-// Spielinhalte stehen getrennt in missionen.js.
-// tasks und olympics sind oben im bearbeitbaren Missionsbereich definiert.
-let player=get(KEY),
-host=get(HOST),
-selectedVote=[];
-// Zeigt die Startseite und verbindet die Buttons mit ihren Aktionen.
 
-// Zeigt die Startseite und verbindet die Buttons mit ihren Aktionen.
-function landing(){
-    app.innerHTML=`<h1>🚨 KUHSTALL:<br>AUSBRUCH 2026</h1><p class="lead">30 Minuten. Geheime Rollen. Verrückte Missionen. Ein mysteriöser MUH-Virus.</p><div class="panel"><h2>Willkommen im Sperrgebiet</h2><p>Mindestens eine Person verbreitet den Virus. Erledigt Aufgaben, scannt Infektionscodes und enttarnt die ursprünglichen Übeltäter, bevor die Jubiläumsfeier eröffnet wird.</p><button class="btn" id="join">🎟️ Spielcode eingeben</button><button class="btn secondary" id="setup">⚙️ Spielleitung: Runde vorbereiten</button>${player?'<button class="btn secondary" id="resume">📱 Meine Runde fortsetzen</button>':''}</div><p class="muted">5–10 Personen · Alle mit eigenem Handy · Ohne Backend · Keine App nötig</p>`;
-    $('#join').onclick=joinForm;
-    $('#setup').onclick=hostForm;
-    if($('#resume'))$('#resume').onclick=()=>renderPlayer()
+// ============================================================================
+// 1. SPIEL-EINSTELLUNGEN – HIER KANNST DU DAS SPIEL ANPASSEN
+// ============================================================================
+const SETTINGS = {
+  minPlayers: 5,
+  maxPlayers: 10,
+  voechterCount: 2,
+  phases: [1, 2, 3],
+  // Die Punkte gelten nur für das Inkompetenzteam.
+  // Vöchter-Missionen sind Pflichtmissionen und geben keine Ranglistenpunkte.
+};
+
+// ============================================================================
+// 2. MISSIONEN – HIER NEUE AUFGABEN HINZUFÜGEN
+// ============================================================================
+// Jede Mission ist ein Objekt mit:
+// id:    EINDEUTIGE Kennung (nie doppelt verwenden; auch später nicht ändern)
+// phase: 1 = sofort, 2 = nach Ansage bei ~20 Min., 3 = bei ~40 Min.
+// text:  Aufgabentext, der auf dem Handy erscheint
+// points: Punkte für das Inkompetenzteam (nur bei crew-Missionen)
+//
+// WICHTIG: Vöchter müssen ALLE ihre Missionen erledigen, um gewinnen zu können.
+// Darum sollten ihre Aufgaben machbar und klar überprüfbar sein.
+// Bei jeder Rolle kannst du einfach weitere Zeilen im gleichen Format ergänzen.
+const MISSIONS = {
+  crew: [
+    { id: 'c01', phase: 1, points: 10, text: 'Bringe jemanden dazu, eine lustige Erinnerung an eine frühere Feier zu erzählen.' },
+    { id: 'c02', phase: 1, points: 10, text: 'Lass dir von einem anderen Gast einen neuen Kuhstall-Spitznamen geben.' },
+    { id: 'c03', phase: 2, points: 15, text: 'Sorge dafür, dass mindestens drei Gäste gleichzeitig über ein gemeinsames Thema sprechen.' },
+    { id: 'c04', phase: 2, points: 15, text: 'Überzeuge jemanden, dir eine besonders kuriose Kirmesgeschichte zu erzählen.' },
+    { id: 'c05', phase: 3, points: 20, text: 'Bringe zwei andere Gäste dazu, sich gegenseitig ein Kompliment zu machen.' },
+    { id: 'c06', phase: 3, points: 20, text: 'Sorge dafür, dass mindestens drei Personen gemeinsam einen Kuhstall-Schlachtruf erfinden.' }
+  ],
+  voechter: [
+    { id: 'v01', phase: 1, text: 'Bringe jemanden dazu, die Vöchter Kirmes als Gesprächsthema anzusprechen, ohne deine Mission zu verraten.' },
+    { id: 'v02', phase: 2, text: 'Überzeuge einen Gast im Gespräch, mindestens einen Vorteil der Vöchter Kirmes gegenüber dem Kuhstall zu nennen.' },
+    { id: 'v03', phase: 3, text: 'Sorge dafür, dass mindestens zwei Gäste über die Frage diskutieren, ob die Vöchter Kirmes nächstes Jahr besser besucht sein könnte.' }
+  ]
+};
+
+// ============================================================================
+// 3. GRUNDLEGENDE HILFSFUNKTIONEN
+// ============================================================================
+const $ = id => document.getElementById(id);
+const STORAGE_KEY = 'voechter-im-kuhstall-v1';
+const HOST_KEY = 'voechter-im-kuhstall-host-v1';
+let state = null;
+let hostData = null;
+
+function showScreen(id) {
+  ['home', 'setup', 'tickets', 'player', 'hostResults'].forEach(name => $(name).classList.toggle('hidden', name !== id));
+}
+function safeText(value) { return String(value ?? ''); }
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function saveHost() { localStorage.setItem(HOST_KEY, JSON.stringify(hostData)); }
+function readJson(key) { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } }
+function makeId() { return (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2)); }
+function encodeTicket(data) {
+  const bytes = new TextEncoder().encode(JSON.stringify(data));
+  let binary = ''; bytes.forEach(b => binary += String.fromCharCode(b));
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function decodeTicket(encoded) {
+  const base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+  const binary = atob(base64);
+  return JSON.parse(new TextDecoder().decode(Uint8Array.from(binary, c => c.charCodeAt(0))));
+}
+function makeButton(label, callback, css = 'secondary') {
+  const btn = document.createElement('button'); btn.textContent = label; btn.className = css; btn.addEventListener('click', callback); return btn;
+}
+function addText(parent, tag, text, className = '') {
+  const node = document.createElement(tag); node.textContent = text; if (className) node.className = className; parent.appendChild(node); return node;
+}
+function randomInt(max) {
+  const bytes = new Uint32Array(1); crypto.getRandomValues(bytes);
+  return Math.floor((bytes[0] / 4294967296) * max);
+}
+function shuffle(array) {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) { const j = randomInt(i + 1); [result[i], result[j]] = [result[j], result[i]]; }
+  return result;
 }
 
-// Erstellt das Formular für die Spielleitung und verteilt die geheimen Rollen.
-function hostForm(){
-    app.innerHTML=`<h1>⚙️ Stallmeister</h1><div class="panel"><h2>Neue Runde vorbereiten</h2><label>Teilnehmerzahl</label><select id="count">${Array.from({length:6},(_,i)=>`<option value="${i+5}" ${
-        i===3?'selected':''
-    }>${
-        i+5
-    } Personen</option>`).join('')}</select><label>Start in wie vielen Minuten?</label><select id="delay"><option value="2">2 Minuten</option><option value="5" selected>5 Minuten</option><option value="10">10 Minuten</option><option value="15">15 Minuten</option></select><p class="muted">Jeder erhält einen individuellen Link. Bitte mische die Codekarten und verteile genau eine pro Person. Die Spielleitung darf selbst mitspielen, sollte dann aber die Rollenliste nicht lesen.</p><button class="btn" id="create">🐮 Runde erstellen</button><button class="btn secondary" id="back">Zurück</button></div>`;$('#back').onclick=landing;$('#create').onclick=()=>{let n=+$('#count').value,start=Date.now()+Number($('#delay').value)*60000;let r=n>=8?['virus','virus','detective','detective']:['virus','detective'];while(r.length<n)r.push('cow');for(let i=r.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]]}let id=Math.random().toString(36).slice(2,9).toUpperCase();host={id,start,slots:r.map((role,i)=>({id:'KUH-'+String(i+1).padStart(2,'0'),role,secret:Math.random().toString(36).slice(2,10)}))};save(HOST,host);renderHost()}}
+// ============================================================================
+// 4. SPIEL VORBEREITEN: NAMEN, ZUFALLSROLLEN, PERSÖNLICHE LINKS
+// ============================================================================
+function generateGame() {
+  const names = $('namesInput').value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+  const normalized = names.map(s => s.toLocaleLowerCase('de'));
+  if (names.length < SETTINGS.minPlayers || names.length > SETTINGS.maxPlayers) {
+    $('setupError').textContent = `Bitte ${SETTINGS.minPlayers} bis ${SETTINGS.maxPlayers} Namen eingeben.`; return;
+  }
+  if (new Set(normalized).size !== names.length) {
+    $('setupError').textContent = 'Jeder Name darf nur einmal vorkommen.'; return;
+  }
+  $('setupError').textContent = '';
+  if (!confirm('Neue Rollen auslosen? Bereits vorhandene Stallmeister-Daten auf diesem Gerät werden ersetzt.')) return;
+  const roles = shuffle([...Array(SETTINGS.voechterCount).fill('voechter'), ...Array(names.length - SETTINGS.voechterCount).fill('crew')]);
+  const gameId = makeId();
+  hostData = { gameId, players: names.map((name, i) => ({ id: `p${i+1}`, name, role: roles[i] })) };
+  saveHost(); renderTickets(); showScreen('tickets');
+}
+function ticketUrl(player) {
+  const ticket = { gameId: hostData.gameId, playerId: player.id, name: player.name, role: player.role, players: hostData.players.map(p => ({ id: p.id, name: p.name })) };
+  const url = new URL(window.location.href);
+  url.search = ''; url.hash = 'ticket=' + encodeTicket(ticket);
+  return url.toString();
+}
+function renderTickets() {
+  const list = $('ticketList'); list.replaceChildren();
+  hostData.players.forEach((player, index) => {
+    const box = document.createElement('div'); box.className = 'ticket';
+    addText(box, 'h3', `${index+1}. ${player.name}`);
+    const url = ticketUrl(player);
+    const qr = document.createElement('div'); qr.className = 'qr'; box.appendChild(qr);
+    if (window.QRCode) { new QRCode(qr, { text: url, width: 160, height: 160, correctLevel: QRCode.CorrectLevel.L }); }
+    else addText(qr, 'p', 'QR-Code-Bibliothek nicht geladen. Link funktioniert trotzdem.', 'small');
+    const actions = document.createElement('div'); actions.className = 'row';
+    actions.appendChild(makeButton('🔗 Persönlichen Link kopieren', async () => {
+      try { await navigator.clipboard.writeText(url); alert(`Link für ${player.name} kopiert.`); }
+      catch { prompt('Link manuell kopieren:', url); }
+    }));
+    actions.appendChild(makeButton('📱 Link öffnen', () => window.open(url, '_blank', 'noopener')));
+    box.appendChild(actions); list.appendChild(box);
+  });
+  const end = document.createElement('div'); end.className = 'topline';
+  end.appendChild(makeButton('🏆 Zur Stallmeister-Auswertung', () => { renderHostResults(); showScreen('hostResults'); }));
+  list.appendChild(end);
+}
 
-// Liefert die Seitenadresse ohne QR-Code-Zusatz (#...).
-function base(){
-        return location.href.split('#')[0].split('?')[0]
+// ============================================================================
+// 5. PERSÖNLICHES SPIEL LADEN UND LOKAL SPEICHERN
+// ============================================================================
+function loadTicketFromUrl() {
+  const match = location.hash.match(/^#ticket=(.+)$/);
+  if (!match) return false;
+  try {
+    const ticket = decodeTicket(match[1]);
+    if (!ticket.gameId || !ticket.playerId || !['crew', 'voechter'].includes(ticket.role) || !Array.isArray(ticket.players)) throw Error('Ungültiges Ticket');
+    const existing = readJson(STORAGE_KEY);
+    if (existing && existing.gameId === ticket.gameId && existing.playerId === ticket.playerId) state = existing;
+    else state = { ...ticket, phase: 1, done: [], vote: null };
+    saveState();
+    history.replaceState(null, '', location.pathname + location.search);
+    return true;
+  } catch (err) { alert('Der Spielerlink konnte nicht gelesen werden. Bitte einen neuen Link beim Stallmeister anfordern.'); return false; }
+}
+function restorePlayer() {
+  const stored = readJson(STORAGE_KEY);
+  if (!stored || !stored.gameId || !stored.playerId) return false;
+  state = stored; return true;
+}
+function renderPlayer() {
+  if (!state) return;
+  showScreen('player');
+  const isCrew = state.role === 'crew';
+  $('playerName').textContent = state.name;
+  $('playerRole').textContent = isCrew ? '🐮 Inkompetenzteam' : '🦊 Vöchter';
+  $('roleDescription').textContent = isCrew
+    ? 'Sammle persönliche Punkte und halte Ausschau nach den beiden Vöchtern. Wer aus dem Inkompetenzteam die meisten Punkte erreicht, wird Inkompetenz-Champion!'
+    : 'Pssst! Du bist einer der beiden Vöchter. Erledige ALLE deine Pflichtmissionen und sorge dafür, dass mindestens einer von euch nicht enttarnt wird.';
+  const missions = MISSIONS[state.role];
+  const done = missions.filter(m => state.done.includes(m.id));
+  const points = isCrew ? done.reduce((sum, m) => sum + m.points, 0) : 0;
+  $('playerScore').textContent = isCrew ? `${points} Punkte` : `${done.length}/${missions.length} Pflicht`;
+  $('phaseDescription').textContent = state.phase === 4
+    ? '🏁 Das Finale läuft. Missionen können nicht mehr abgeschlossen werden.'
+    : `Phase ${state.phase} läuft. Alle Aufgaben bis einschließlich Phase ${state.phase} sind freigeschaltet.`;
+  $('phase2Btn').disabled = state.phase >= 2;
+  $('phase3Btn').disabled = state.phase >= 3;
+  $('finalBtn').disabled = state.phase === 4;
+  $('missionPanel').classList.toggle('hidden', state.phase === 4);
+  $('finalPanel').classList.toggle('hidden', state.phase !== 4);
+  if (state.phase !== 4) renderMissions(); else renderFinal();
+}
+function renderMissions() {
+  const list = $('missionList'); list.replaceChildren();
+  MISSIONS[state.role].forEach(mission => {
+    const available = mission.phase <= state.phase;
+    const completed = state.done.includes(mission.id);
+    const box = document.createElement('div'); box.className = 'mission' + (completed ? ' done' : '');
+    const title = state.role === 'crew' ? `Phase ${mission.phase} · ${mission.points} Punkte` : `Phase ${mission.phase} · Pflichtmission`;
+    addText(box, 'span', title, 'tag');
+    addText(box, 'p', available ? mission.text : '🔒 Diese geheime Mission wird erst in Phase ' + mission.phase + ' enthüllt.');
+    if (available) {
+      const btn = makeButton(completed ? '✓ Erledigt – zurücknehmen' : '✓ Mission erledigt', () => {
+        if (state.done.includes(mission.id)) state.done = state.done.filter(id => id !== mission.id);
+        else state.done.push(mission.id);
+        saveState(); renderPlayer();
+      }, completed ? 'secondary' : '');
+      box.appendChild(btn);
     }
+    list.appendChild(box);
+  });
+}
+function advancePhase(target) {
+  if (!state || target <= state.phase) return;
+  const label = target === 4 ? 'das Finale starten und alle offenen Missionen schließen' : `zu Phase ${target} springen`;
+  if (!confirm(`Hat der Stallmeister es angesagt? Möchtest du wirklich ${label}?`)) return;
+  state.phase = target; saveState(); renderPlayer();
+}
 
-// Baut den persönlichen Einladungslink für einen Spieler.
-function playerUrl(s){
-        return base()+'#join='+pack({
-            v:1,room:host.id,start:host.start,n:host.slots.length,id:s.id,role:s.role,secret:s.secret
-        })
-    }
+// ============================================================================
+// 6. FINALE: ZWEI VERDÄCHTIGE WÄHLEN UND ERGEBNIS VORZEIGEN
+// ============================================================================
+function renderFinal() {
+  const players = state.players.filter(p => p.id !== state.playerId);
+  ['guess1', 'guess2'].forEach(id => {
+    const select = $(id); select.replaceChildren();
+    const blank = document.createElement('option'); blank.value = ''; blank.textContent = 'Person auswählen …'; select.appendChild(blank);
+    players.forEach(p => { const option = document.createElement('option'); option.value = p.id; option.textContent = p.name; select.appendChild(option); });
+  });
+  if (state.vote) { $('guess1').value = state.vote[0]; $('guess2').value = state.vote[1]; }
+  $('voterSummary').replaceChildren();
+  if (state.role === 'voechter') {
+    const missions = MISSIONS.voechter;
+    const done = missions.filter(m => state.done.includes(m.id)).length;
+    addText($('voterSummary'), 'p', `Dein Pflichtmissionsstatus: ${done} von ${missions.length} erledigt. Zeige diesen Status dem Stallmeister bei der Auswertung.`);
+  } else {
+    const score = MISSIONS.crew.filter(m => state.done.includes(m.id)).reduce((s,m)=>s+m.points,0);
+    addText($('voterSummary'), 'p', `Dein Endpunktestand: ${score}. Zeige ihn dem Stallmeister für die Inkompetenz-Rangliste.`);
+  }
+  renderReceipt();
+}
+function saveVote() {
+  const a = $('guess1').value, b = $('guess2').value;
+  if (!a || !b || a === b) { $('voteMessage').textContent = 'Bitte zwei unterschiedliche Personen auswählen.'; return; }
+  state.vote = [a,b]; saveState(); $('voteMessage').textContent = 'Deine Tipps wurden auf diesem Handy gespeichert.'; renderReceipt();
+}
+function renderReceipt() {
+  $('receipt').classList.toggle('hidden', !state.vote);
+  if (!state.vote) return;
+  const names = state.vote.map(id => state.players.find(p => p.id === id)?.name || '?');
+  $('receipt').textContent = `${state.name} tippt auf: ${names.join(' und ')}. Bitte dem Stallmeister vorzeigen.`;
+}
 
-// Zeigt der Spielleitung die persönlichen Links und QR-Codes.
-function renderHost(){
-        if(!host)return hostForm();
-        app.innerHTML=`<h1>📋 Spielleitung</h1><div class="panel"><h2>Runde ${esc(host.id)}</h2><p>Spielstart: <b>${new Date(host.start).toLocaleString('de-DE',{dateStyle:'short',timeStyle:'short'})}</b> · Ende: <b>${new Date(host.start+30*60000).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}</b></p><p class="muted">Die folgenden Links enthalten geheime Rollen. Bitte jeweils nur der vorgesehenen Person zeigen. Jeder Link darf nur einmal verteilt werden.</p><div id="links">${host.slots.map((s,i)=>`<div class="codeitem"><b>Umschlag ${i+1}</b> · ${esc(s.id)}<button class="btn secondary" data-copy="${i}">🔗 Persönlichen Link kopieren</button><details><summary>Link / QR-Code anzeigen</summary><div id="qr${i}" class="qr"></div><a href="${esc(playerUrl(s))}">${esc(playerUrl(s))}</a></details></div>`).join('')}</div><button class="btn secondary" id="print">🖨️ Codekarten drucken</button><button class="btn warn" id="resetHost">Neue Runde erstellen</button></div><div class="panel"><h3>Spielablauf</h3><p>0–5 Min.: Rollen & Missionen · 5–15 Min.: Infektion · 15–25 Min.: Olympiade · 25–30 Min.: Abstimmung & Finale.</p><p class="muted">Alle Handys verwenden dieselbe Startzeit aus dem Link. Spielleiter: Finale moderieren und Punkte vergleichen.</p></div>`;
-        document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>copy(playerUrl(host.slots[+b.dataset.copy])));
-        host.slots.forEach((s,i)=>qr(playerUrl(s),$('#qr'+i)));
-        $('#print').onclick=()=>window.print();
-        $('#resetHost').onclick=()=>{
-            if(confirm('Neue Runde erstellen? Die bisherigen Links werden dadurch nicht ungültig, aber nicht mehr angezeigt.'))hostForm()
-        }
-    }
+// ============================================================================
+// 7. STALLMEISTER: STIMMEN MANUELL AUSZÄHLEN, SIEG UND RANGLISTE
+// ============================================================================
+// WICHTIG: Ohne Server kann der Stallmeister keine anderen Handys auslesen.
+// Die beiden Kandidaten mit den meisten Stimmen werden hier eingetragen.
+// Bei Gleichstand um Platz 2: Stichwahl durchführen, bevor ihr auswertet.
+function renderHostResults() {
+  if (!hostData) return;
+  const fields = $('hostFields'); fields.replaceChildren();
+  addText(fields, 'h3', '1. Die zwei meistgewählten Verdächtigen');
+  ['suspectA','suspectB'].forEach((id, i) => {
+    const label = document.createElement('label'); label.htmlFor = id; label.textContent = `Verdächtiger ${i+1}`; fields.appendChild(label);
+    const select = document.createElement('select'); select.id = id;
+    const empty = document.createElement('option'); empty.value = ''; empty.textContent = 'Bitte wählen'; select.appendChild(empty);
+    hostData.players.forEach(p => { const opt = document.createElement('option'); opt.value = p.id; opt.textContent = p.name; select.appendChild(opt); });
+    fields.appendChild(select);
+  });
+  addText(fields, 'h3', '2. Pflichtmissionen der beiden Vöchter');
+  hostData.players.filter(p => p.role === 'voechter').forEach(p => {
+    const label = document.createElement('label'); label.className = 'choice';
+    const input = document.createElement('input'); input.type = 'checkbox'; input.id = `complete-${p.id}`;
+    label.appendChild(input); addText(label, 'span', `${p.name}: ALLE Pflichtmissionen erledigt`); fields.appendChild(label);
+  });
+  const scores = $('crewScores'); scores.replaceChildren();
+  hostData.players.filter(p => p.role === 'crew').forEach(p => {
+    const label = document.createElement('label'); label.htmlFor = `score-${p.id}`; label.textContent = p.name; scores.appendChild(label);
+    const input = document.createElement('input'); input.type = 'number'; input.min = '0'; input.step = '1'; input.value = '0'; input.id = `score-${p.id}`; scores.appendChild(input);
+  });
+}
+function evaluate() {
+  const a = $('suspectA').value, b = $('suspectB').value;
+  const result = $('evaluation'); result.replaceChildren();
+  if (!a || !b || a === b) { addText(result, 'p', 'Bitte zwei unterschiedliche Verdächtige eintragen.', 'error'); return; }
+  const voechter = hostData.players.filter(p => p.role === 'voechter');
+  const allDone = voechter.every(p => $(`complete-${p.id}`).checked);
+  const bothCaught = voechter.every(p => [a,b].includes(p.id));
+  const win = allDone && !bothCaught;
+  addText(result, 'h2', win ? '🦊 Die Vöchter gewinnen!' : '🐮 Das Inkompetenzteam gewinnt!');
+  addText(result, 'p', `Vöchter: ${voechter.map(p=>p.name).join(' und ')}.`);
+  addText(result, 'p', `Alle Vöchter-Pflichtmissionen geschafft: ${allDone ? 'Ja' : 'Nein'}. Beide Vöchter enttarnt: ${bothCaught ? 'Ja' : 'Nein'}.`);
+}
+function rankCrew() {
+  const list = hostData.players.filter(p => p.role === 'crew').map(p => ({ name:p.name, points:Math.max(0,Number($(`score-${p.id}`).value)||0) })).sort((a,b)=>b.points-a.points);
+  const node = $('ranking'); node.replaceChildren();
+  list.forEach((p,i) => addText(node,'p',`${i+1}. ${p.name} – ${p.points} Punkte${i===0?' 🏆':''}`));
+}
 
-// Kopiert einen Link in die Zwischenablage.
-function copy(s){
-        if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(s).then(()=>toast('Link kopiert')).catch(()=>prompt('Link kopieren:',s));
-        else prompt('Link kopieren:',s)
-    }
+// ============================================================================
+// 8. BUTTONS VERKNÜPFEN UND SPIEL STARTEN
+// ============================================================================
+$('newGameBtn').addEventListener('click', () => showScreen('setup'));
+$('backBtn').addEventListener('click', () => showScreen('home'));
+$('generateBtn').addEventListener('click', generateGame);
+$('openOwnBtn').addEventListener('click', () => showScreen('home'));
+$('resumeBtn').addEventListener('click', renderPlayer);
+$('phase2Btn').addEventListener('click', () => advancePhase(2));
+$('phase3Btn').addEventListener('click', () => advancePhase(3));
+$('finalBtn').addEventListener('click', () => advancePhase(4));
+$('saveVoteBtn').addEventListener('click', saveVote);
+$('evaluateBtn').addEventListener('click', evaluate);
+$('rankBtn').addEventListener('click', rankCrew);
 
-// Zeichnet einen QR-Code oder zeigt einen Ersatzhinweis an.
-function qr(url,el){
-        if(window.QRCode){
-            new QRCode(el,{
-                text:url,width:180,height:180,correctLevel:QRCode.CorrectLevel.L
-            })
-        }else{
-            el.innerHTML='<span style="color:#111;font-size:12px">QR-Bibliothek nicht geladen. Link darunter verwenden.</span>'
-        }
-    }
-
-// Zeigt das Formular zum Beitreten zu einer Runde.
-function joinForm(){
-        app.innerHTML=`<h1>🎟️ Stall-Einlass</h1><div class="panel"><p>Öffne deinen persönlichen Link oder füge deinen Code ein.</p><label>Persönlicher Link oder Code</label><input id="ticket" placeholder="Hier einfügen"><button class="btn" id="enter">Einlass prüfen</button><button class="btn secondary" id="back">Zurück</button></div>`;
-        $('#back').onclick=landing;
-        $('#enter').onclick=()=>{
-            try{
-                let raw=$('#ticket').value.trim();
-                let code=raw.includes('#join=')?raw.split('#join=')[1]:raw;
-                acceptTicket(unpack(code))
-            }catch{
-                toast('Ungültiger Spielcode')
-            }
-        }
-    }
-
-// Prüft den persönlichen Link und speichert den Spieler lokal.
-function acceptTicket(t){
-        if(t.v!==1||!t.room||!t.id||!roles[t.role]||!Number.isFinite(t.start))throw Error('Invalid ticket');
-        if(player&&player.room!==t.room&&!confirm('Du hast bereits eine Runde gespeichert. Neue Runde beginnen?'))return;
-        if(player&&player.room===t.room&&player.id!==t.id&&!confirm('Auf diesem Gerät ist bereits ein anderer Spieler angemeldet. Wechseln?'))return;
-        player=player&&player.room===t.room&&player.id===t.id?player:{
-            room:t.room,
-            start:t.start,
-            n:t.n||8,
-            id:t.id,
-            role:t.role,
-            secret:t.secret,
-            name:'',
-            points:0,
-            done:[],
-            infected:t.role==='virus',
-            infectedBy:null,
-            infectedAt:null,
-            infCount:0,
-            usedTokens:[],
-            vote:[],
-            finalized:false,
-            olympicDone:[],
-            taskIndex:0
-        };
-        save(KEY,player);
-        history.replaceState(null,'',base());
-        renderPlayer()
-    }
-
-// Berechnet anhand der Uhrzeit, in welcher Spielphase wir sind.
-function phase(){
-        let elapsed=(Date.now()-player.start)/60000;
-        return elapsed<0?-1:elapsed<5?0:elapsed<15?1:elapsed<25?2:elapsed<30?3:4
-    }
-
-// Übersetzt die Nummer einer Spielphase in ihren Namen.
-function phaseLabel(p){
-        return ['ROLLEN & MISSIONEN','ANSTECKUNG','STALL-OLYMPIADE','FINALE','SPIEL BEENDET'][p]||'STARTET BALD'
-    }
-
-// Zeigt die persönliche Spieleransicht inklusive Rolle und Punktestand.
-function renderPlayer(){
-        if(!player)return landing();
-        let p=phase();
-        if(!player.name){
-            app.innerHTML=`<h1>🐮 Dein Stallausweis</h1><div class="panel"><label>Dein Kuhstall-Name</label><input id="name" maxlength="25" placeholder="z. B. Euter-007"><button class="btn" id="saveName">Weiter zur Geheimrolle</button></div>`;
-            $('#saveName').onclick=()=>{
-                let v=$('#name').value.trim();
-                if(!v)return toast('Bitte einen Namen eingeben');
-                player.name=v;
-                save(KEY,player);
-                renderPlayer()
-            };
-            return
-        }let remaining=p===-1?player.start-Date.now():p===4?0:player.start+([5,15,25,30][p])*60000-Date.now();
-        let m=Math.max(0,Math.ceil(remaining/1000));
-        app.innerHTML=`<h1>🐮 ${esc(player.name)}</h1><div class="row"><span class="pill">${esc(player.id)}</span><span class="pill">⭐ ${player.points} Kuhpunkte</span></div><div class="panel"><div class="row"><span class="tag">${p===-1?'START IN':`PHASE ${p+1}`}</span><span id="clock" class="big">${Math.floor(m/60)}:${String(m%60).padStart(2,'0')}</span></div><h2>${phaseLabel(p)}</h2><div class="bar"><div class="fill" style="width:${Math.min(100,Math.max(0,(Date.now()-player.start)/1800000*100))}%"></div></div><p class="muted">${p===-1?'Warte auf den gemeinsamen Start.':p===4?'Die Spielzeit ist vorbei.':'Alle Phasen wechseln automatisch nach der gemeinsamen Startzeit.'}</p></div><div class="panel"><div class="row"><h2>Geheime Rolle</h2><span class="tag">NUR FÜR DICH</span></div><div class="inner center"><div class="emoji">${roles[player.role].icon}</div><h2>${roles[player.role].label}</h2><p>${roles[player.role].desc}</p></div><p class="status">Infektionsstatus: <b>${player.infected?'🦠 INFIZIERT':'🐮 NICHT INFIZIERT'}</b></p></div><div id="content"></div><button class="btn secondary" id="help">📜 Regeln & Fairplay</button>`;
-        $('#help').onclick=rules;
-        let content=$('#content');
-        if(p===-1){
-            content.innerHTML='<div class="panel"><h2>Gleich geht es los!</h2><p>Halte deine Rolle geheim. Sprich mit den anderen, aber zeige niemandem diese Seite.</p></div>'
-        }else if(p<=2){
-            renderTasks(content,p)
-        }else{
-            renderFinal(content,p)
-        }updateClock()
-    }
-
-// Wählt die Missionsliste passend zur Rolle beziehungsweise Infektion.
-function taskPool(){
-        return player.infected?tasks.virus:tasks[player.role]
-    }
-
-// Zeigt die aktuelle Mission und vergibt Punkte nach Bestätigung.
-function renderTasks(content,p){
-        let pool=taskPool(),
-        idx=player.taskIndex%pool.length,
-        task=pool[idx];
-        let canInfect=player.infected&&p>=1&&player.infCount<2;
-        content.innerHTML=`<div class="panel"><span class="tag">DEINE AKTUELLE MISSION</span><h2>🎯 Auftrag ${player.done.length+1}</h2><p class="lead">${esc(task[0])}</p><p class="success">+${task[1]} Kuhpunkte bei Erfolg</p><button class="btn" id="complete">✅ Mission geschafft</button><button class="btn secondary" id="skip">↪️ Mission überspringen</button><p class="muted">Missionen werden auf Vertrauensbasis bestätigt. Nicht dieselbe Aufgabe direkt zweimal werten.</p></div>${p>=1?`<div class="panel"><h2>🦠 Infektionsstation</h2>${player.infected?`<p>Du bist infiziert. ${canInfect?'Nach einer erfolgreichen Mission darfst du einen Infektionscode an eine andere Person übergeben.':'Deine verfügbaren Infektions-Übergaben sind aufgebraucht oder noch gesperrt.'}</p><p>Bestätigte Übergaben auf diesem Gerät: <b>${player.infCount}/2</b></p><button class="btn warn" id="infect" ${canInfect?'':'disabled'}>🦠 Infektions-QR anzeigen</button>`:'<p>Wenn dir jemand einen Infektionscode zeigt, scanne ihn mit der normalen Handykamera. Die Webseite öffnet sich und fragt nach deiner Zustimmung.</p>'}</div>`:''}${p===2?`<div class="panel"><h2>🏆 Stall-Olympiade</h2>${olympics.map((o,i)=>`<div class="card"><b>${esc(o[0])}</b><p>${esc(o[1])}</p><button class="btn secondary" data-ol="${i}" ${player.olympicDone.includes(i)?'disabled':''}>${player.olympicDone.includes(i)?'✓ Erledigt':'+50 Punkte für Teilnahme'}</button></div>`).join('')}</div>`:''}`;
-        $('#complete').onclick=()=>{
-            player.points+=task[1];
-            player.done.push({
-                task:task[0],time:Date.now()
-            });
-            player.taskIndex++;
-            save(KEY,player);
-            renderPlayer();
-            toast('Mission geschafft! +'+task[1])
-        };
-        $('#skip').onclick=()=>{
-            player.taskIndex++;
-            save(KEY,player);
-            renderPlayer()
-        };
-        if($('#infect'))$('#infect').onclick=showInfection;
-        document.querySelectorAll('[data-ol]').forEach(b=>b.onclick=()=>{
-            let i=+b.dataset.ol;if(!player.olympicDone.includes(i)){
-                player.olympicDone.push(i);player.points+=50;save(KEY,player);renderPlayer()
-            }
-        })
-    }
-
-// Erzeugt einen QR-Code, mit dem andere Spieler infiziert werden können.
-function showInfection(){
-        let token={
-            v:1,
-            type:'infect',
-            room:player.room,
-            from:player.id,
-            fromName:player.name,
-            nonce:player.id+'-'+(player.infCount+1)+'-'+Math.random().toString(36).slice(2,8)
-        };
-        let url=base()+'#infect='+pack(token);
-        $('#content').insertAdjacentHTML('afterbegin',`<div class="panel" id="infectionBox"><h2>🦠 Infektions-Übergabe</h2><p>Zeige den QR-Code nur nach einer erfolgreichen Mission. Die Zielperson scannt ihn und bestätigt auf ihrem Handy.</p><div id="infectionQR" class="qr"></div><button class="btn secondary" id="copyInfection">🔗 Infektionslink kopieren</button><button class="btn warn" id="confirmInfection">✓ Übergabe abgeschlossen</button><button class="btn secondary" id="cancelInfection">Abbrechen</button><p class="muted">Die Webseite kann nicht prüfen, ob die andere Person wirklich bestätigt hat. Bitte ehrlich spielen. Ein Code ist technisch kopierbar.</p></div>`);
-        qr(url,$('#infectionQR'));
-        $('#copyInfection').onclick=()=>copy(url);
-        $('#confirmInfection').onclick=()=>{
-            if(confirm('Hat die Zielperson den Code geöffnet und die Infektion bestätigt?')){
-                player.infCount++;
-                save(KEY,player);
-                renderPlayer();
-                toast('Übergabe notiert')
-            }
-        };
-        $('#cancelInfection').onclick=renderPlayer();
-        $('#infect').disabled=true
-    }
-
-// Verarbeitet einen gescannten Infektionscode.
-function infectionIncoming(t){
-        if(!player){
-            history.replaceState(null,'',base());
-            app.innerHTML='<h1>🦠 Infektionscode</h1><div class="panel"><p>Du musst zuerst deinen persönlichen Spielerlink öffnen, bevor du Infektionen empfangen kannst.</p><button class="btn" id="home">Zur Startseite</button></div>';
-            $('#home').onclick=landing;
-            return
-        }history.replaceState(null,'',base());
-        if(t.room!==player.room||t.from===player.id||!t.nonce){
-            toast('Dieser Infektionscode passt nicht zu dir.');
-            return renderPlayer()
-        }if(phase()<1||phase()>2){
-            toast('Infektionen sind nur von Minute 5 bis 25 erlaubt.');
-            return renderPlayer()
-        }if(player.infected||player.usedTokens.includes(t.nonce)){
-            toast('Du bist bereits infiziert oder hast den Code benutzt.');
-            return renderPlayer()
-        }app.innerHTML=`<h1>🦠 INFEKTIONSALARM!</h1><div class="panel"><div class="emoji center">🚨</div><h2>${esc(t.fromName||t.from)} möchte dich infizieren!</h2><p>Eine andere Person hat ihre Infektionsmission abgeschlossen und zeigt dir ihren Code. Bestätige nur, wenn das wirklich passiert ist.</p><button class="btn warn" id="accept">Infektion bestätigen</button><button class="btn secondary" id="deny">Ablehnen</button></div>`;
-        $('#accept').onclick=()=>{
-            player.infected=true;
-            player.infectedBy=t.from;
-            player.infectedAt=Date.now();
-            player.usedTokens.push(t.nonce);
-            player.taskIndex=0;
-            save(KEY,player);
-            renderPlayer();
-            toast('Du bist jetzt infiziert!')
-        };
-        $('#deny').onclick=renderPlayer
-    }
-
-// Zeigt Abstimmung und Abschluss der Runde.
-function renderFinal(content,p){
-        let choices=host&&host.id===player.room?host.slots.map(s=>s.id):Array.from({
-            length:player.n||8
-        },(_,i)=>'KUH-'+String(i+1).padStart(2,'0'));
-        let need=player.n>=8?2:1;
-        content.innerHTML=`<div class="panel"><h2>🕵️ Der finale Verdacht</h2><p>Wer war <b>von Anfang an</b> Patient Null? Wähle ${need} ${need===1?'Person':'Personen'}. Später Infizierte zählen nicht.</p><p class="muted">Die Spielleitung kann bei 5–7 Spielern eine, bei 8–10 Spielern zwei ursprüngliche Virusrollen vergeben haben. Falls du die Spielerzahl nicht kennst, frag die Spielleitung.</p>${choices.map(id=>`<button class="choice ${player.vote.includes(id)?'selected':''}" data-vote="${id}">${player.vote.includes(id)?'☑':'☐'} ${id}${id===player.id?' (du)':''}</button>`).join('')}<button class="btn" id="saveVote" ${player.vote.length!==need?'disabled':''}>🔒 Verdacht speichern</button></div><div class="panel"><h2>🏁 Dein Ergebnis</h2><p>⭐ <b>${player.points} Kuhpunkte</b> · ${player.done.length} erledigte Missionen · ${player.infCount} Infektionsübergaben</p><p>Ursprüngliche Rolle: <b>${roles[player.role].label}</b></p><p>Infektionsstatus: <b>${player.infected?'Infiziert':'Nicht infiziert'}</b></p><button class="btn secondary" id="reveal">📣 Meine Rolle beim Finale zeigen</button></div>`;
-        document.querySelectorAll('[data-vote]').forEach(b=>b.onclick=()=>{
-            let id=b.dataset.vote;player.vote=player.vote.includes(id)?player.vote.filter(x=>x!==id):[...player.vote,id].slice(-need);save(KEY,player);renderPlayer()
-        });
-        $('#saveVote').onclick=()=>{
-            player.finalized=true;
-            save(KEY,player);
-            toast('Verdacht lokal gespeichert!')
-        };
-        $('#reveal').onclick=()=>{
-            app.innerHTML=`<h1>🎉 STALLFREIGABE 2026</h1><div class="panel center"><div class="emoji">${roles[player.role].icon}</div><h2>${roles[player.role].label}</h2><p>${esc(player.name)} · ${esc(player.id)}</p><div class="big">⭐ ${player.points}</div><p>Ursprüngliche Rolle: ${roles[player.role].label}</p><p>${player.infected&&player.role!=='virus'?'Später infiziert!':player.role==='virus'?'Von Anfang an infiziert!':'Nicht infiziert.'}</p><p>Mein Verdacht: ${player.vote.map(esc).join(', ')||'kein Tipp'}</p><button class="btn secondary" id="return">Zur Übersicht</button></div>`;
-            $('#return').onclick=renderPlayer
-        }
-    }
-
-// Zeigt die Spielregeln an.
-function rules(){
-        app.innerHTML=`<h1>📜 Stallgesetz</h1><div class="panel"><h2>So wird gespielt</h2><p><b>1.</b> Jeder erhält genau einen persönlichen Spielerlink und hält seine Rolle geheim.</p><p><b>2.</b> Missionen werden in der echten Gruppe erfüllt. Erledigte Missionen selbst bestätigen; keine Doppelwertung derselben Aktion.</p><p><b>3.</b> Zwischen Minute 5 und 25 dürfen Infizierte nach erfolgreicher Mission bis zu zwei Infektionsübergaben vornehmen. Zielperson scannt den QR-Code und bestätigt.</p><p><b>4.</b> Infizierte bleiben für die Wertung in ihrer ursprünglichen Rolle. Ziel der Detektive und Stallbewohner: Patient Null finden.</p><p><b>5.</b> In Minute 25–30 werden die ursprünglichen Infizierten gewählt. Danach zeigen alle ihre Rollen und Punkte. Das Team der Stallbewohner gewinnt, wenn alle ursprünglichen Infizierten korrekt identifiziert wurden. Sonst gewinnt das Virus-Team.</p><p><b>6.</b> Die Person mit den meisten Kuhpunkten wird Oberkuh 2026. Bei Gleichstand: gemeinsames MUH-Duell.</p><p><b>7.</b> Niemand muss Alkohol trinken. Kleine freiwillige Schlücke, alkoholfreie Alternativen und lustige Ersatzaufgaben sind gleichwertig. Kein Trinkzwang und keine Aufgaben, die andere unter Druck setzen.</p><p><b>8.</b> Fairplay: QR-Codes sind nicht fälschungssicher, die Spielleitung vergleicht am Ende die Ergebnisse. Browserdaten nicht während der Runde löschen.</p><button class="btn" id="return">Zurück zum Spiel</button></div>`;
-        $('#return').onclick=renderPlayer
-    }
-
-// Aktualisiert den sichtbaren Countdown.
-function updateClock(){
-        let e=$('#clock');
-        if(!e||!player)return;
-        let p=phase(),
-        end=p===-1?player.start:p===4?Date.now():player.start+[5,15,25,30][p]*60000;
-        let sec=Math.max(0,Math.ceil((end-Date.now())/1000));
-        e.textContent=Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');
-        if(window._phase!==undefined&&window._phase!==p){
-            window._phase=p;
-            renderPlayer()
-        }else window._phase=p
-    } setInterval(()=>{
-        if($('#clock'))updateClock()
-    },1000);
-    // Reagiert auf persönliche Beitrittslinks und Infektionslinks.
-
-// Reagiert auf persönliche Beitrittslinks und Infektionslinks.
-function route(){
-        let hash=location.hash;
-        if(hash.startsWith('#join=')){
-            try{
-                acceptTicket(unpack(hash.slice(6)))
-            }catch{
-                history.replaceState(null,'',base());
-                joinForm();
-                toast('Ungültiger Spielerlink')
-            }return
-        }if(hash.startsWith('#infect=')){
-            try{
-                infectionIncoming(unpack(hash.slice(8)))
-            }catch{
-                history.replaceState(null,'',base());
-                landing();
-                toast('Ungültiger Infektionscode')
-            }return
-        }landing()
-    } route();
-    window.addEventListener('hashchange',route);
+hostData = readJson(HOST_KEY);
+if (loadTicketFromUrl()) renderPlayer();
+else if (restorePlayer()) { $('resumeBtn').classList.remove('hidden'); showScreen('home'); }
+else showScreen('home');
+// Ein Stallmeister kann seine gespeicherten Zugänge über die Setup-Seite erneut anzeigen.
+if (hostData) {
+  const btn = makeButton('🎟️ Vorhandene Spielerlinks anzeigen', () => { renderTickets(); showScreen('tickets'); }, 'secondary');
+  $('home').querySelector('.topline').appendChild(btn);
+}
 </script>
 </body>
 </html>
