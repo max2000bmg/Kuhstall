@@ -70,7 +70,7 @@
     <div id="evaluation" class="topline"></div>
     <details class="topline"><summary>Inkompetenz-Meisterschaft auswerten</summary><p>Trage die Punkte der Teammitglieder ein, wie sie auf deren Handys angezeigt werden.</p><div id="crewScores"></div><button id="rankBtn" class="secondary">Rangliste berechnen</button><div id="ranking"></div></details>
   </section>
-  <footer>Vöchter im Kuhstall 2026 · Version 2.3 (Einzelmissionen pro Phase) · Ohne Backend</footer>
+  <footer>Vöchter im Kuhstall 2026 · Version 2.4 (Getränke und Überspringen) · Ohne Backend</footer>
 </main>
 <script>
 'use strict';
@@ -155,7 +155,7 @@ const MISSIONS = {
     { id: "c57", phase: 2, points: 15, text: "Bringe zwei Gäste dazu, gemeinsam den aktuellen Standort der Goldenen Kuh herauszufinden." },
     { id: "c58", phase: 2, points: 15, text: "Finde Mond- und Sternmünze und merke dir, ob sie noch am ursprünglichen Platz liegen." },
     { id: "c59", phase: 2, points: 15, text: "Frage einen Gast, ob er den Vöchter-Fuchs bereits bewegt hat." },
-    { id: "c60", phase: 2, points: 15, text: "Vertausche die Fundorte zweier unterschiedlicher, frei zugänglicher Symbolmünzen." },
+    { id: "c60", phase: 2, points: 15, text: "Vertausche die Fundorte zweier unterschiedlicher Kuh-, Fuchs- oder Schlüsselmünzen. Mond- und Sternmünze bleiben liegen." },
 
     // PHASE 3 – SOZIALE MISSIONEN
     { id: "c25", phase: 3, points: 20, text: "Bringe mindestens drei Gäste dazu, gemeinsam einen Kuhstall-Schlachtruf zu erfinden." },
@@ -179,8 +179,8 @@ const MISSIONS = {
     { id: "c65", phase: 3, points: 20, text: "Bringe zwei Gäste dazu, den blauen Schlüssel nacheinander weiterzureichen und anschließend sichtbar abzulegen." },
     { id: "c66", phase: 3, points: 20, text: "Bringe zwei Gäste dazu, über den aktuellen Fundort einer gedruckten Figur zu diskutieren." },
     { id: "c67", phase: 3, points: 20, text: "Überzeuge einen Gast, zuerst an einem falschen Ort nach dem Vöchter-Fuchs zu suchen." },
-    { id: "c68", phase: 3, points: 20, text: "Bringe drei unterschiedliche Symbolmünzen an einem sichtbaren Platz zusammen." },
-    { id: "c69", phase: 3, points: 20, text: "Überzeuge einen Gast, die Plätze zweier frei zugänglicher Symbolmünzen zu tauschen." },
+    { id: "c68", phase: 3, points: 20, text: "Bringe eine Kuh-, eine Fuchs- und eine Schlüsselmünze an einem sichtbaren Platz zusammen. Mond- und Sternmünze bleiben liegen." },
+    { id: "c69", phase: 3, points: 20, text: "Überzeuge einen Gast, die Plätze zweier Kuh-, Fuchs- oder Schlüsselmünzen zu tauschen. Mond- und Sternmünze bleiben liegen." },
     { id: "c70", phase: 3, points: 20, text: "Bringe einen Gast dazu, die Goldene Kuh zu versetzen, ohne selbst Hand anzulegen." },
     { id: "c71", phase: 3, points: 20, text: "Bringe jemanden dazu, einen anderen Spieler nach einer auffälligen Aktion mit einer Figur zu fragen." },
     { id: "c72", phase: 3, points: 20, text: "Finde Goldene Kuh, Vöchter-Fuchs und blauen Schlüssel und merke dir ihre aktuellen Fundorte." }
@@ -237,6 +237,31 @@ const MISSIONS = {
   ]
 };
 
+
+// GETRÄNKEMISSIONEN: Alkoholfreie Alternative gilt immer.
+MISSIONS.crew.push(
+  { id: "c73", phase: 1, points: 10, text: "Stoße mit einem anderen Gast auf den Kuhstall an. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+  { id: "c74", phase: 1, points: 10, text: "Bringe jemanden dazu, mit dir auf das Inkompetenzteam anzustoßen. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+  { id: "c75", phase: 1, points: 10, text: "Finde jemanden, der dir erzählt, ob er lieber Bier, Eisteekorn oder Schnaps mag. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+  { id: "c76", phase: 1, points: 10, text: "Erfinde mit einem Gast einen kurzen Kuhstall-Trinkspruch und stoßt darauf an. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+  { id: "c77", phase: 2, points: 15, text: "Zapfe dir mit Erlaubnis ein Bier und stoße anschließend mit jemandem an. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+  { id: "c78", phase: 2, points: 15, text: "Lass dir von einem anderen Gast mit Erlaubnis ein Bier zapfen. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+  { id: "c79", phase: 2, points: 15, text: "Stoße mit zwei anderen Gästen auf den Kuhstall an. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+  { id: "c80", phase: 2, points: 15, text: "Trinke mit einem freiwilligen Gast einen kleinen Schnaps. Ein Schluck reicht. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+  { id: "c81", phase: 3, points: 20, text: "Organisiere einen gemeinsamen Toast mit mindestens drei Gästen. Auch ohne Alkohol kann die Aufgabe erfüllt werden." },
+  { id: "c82", phase: 3, points: 20, text: "Bringe jemanden dazu, einen Trinkspruch auf den Kuhstall vorzutragen, und stoßt gemeinsam an. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+  { id: "c83", phase: 3, points: 20, text: "Lass dir von einem Gast Eisteekorn einschenken und bedanke dich mit einem Kuhstall-Spruch. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+  { id: "c84", phase: 3, points: 20, text: "Bringe drei Gäste dazu, gleichzeitig mit dir anzustoßen. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+);
+MISSIONS.voechter.push(
+  { id: "v37", phase: 1, text: "Bringe jemanden dazu, beim Anstoßen einen Trinkspruch auf die Vöchter Kirmes zu sagen. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+  { id: "v38", phase: 1, text: "Stoße mit einem Gast an und bringe ihn dazu, dabei die Vöchter Kirmes zu erwähnen. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+  { id: "v39", phase: 2, text: "Bringe zwei Gäste dazu, auf die Vöchter Kirmes anzustoßen. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+  { id: "v40", phase: 2, text: "Lass dir von einem Gast ein Bier zapfen und bringe ihn dazu, dabei die Vöchter Kirmes zu erwähnen. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+  { id: "v41", phase: 3, text: "Bringe mindestens drei Gäste dazu, auf die Vöchter Kirmes anzustoßen. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+  { id: "v42", phase: 3, text: "Bringe einen Gast dazu, vor mindestens zwei anderen einen Trinkspruch auf die Vöchter Kirmes vorzutragen. Wenn du keinen Alkohol trinkst, genügt ein normales alkoholfreies Getränk." },
+);
+
 // GEHEIMES ERKENNUNGSRITUAL DER VÖCHTER IN PHASE 2
 // Wird automatisch an jede Phase-2-Vöchter-Mission angehängt.
 
@@ -244,7 +269,7 @@ const FUCHSBAU_RITUAL =
   "ZUSÄTZLICH IN PHASE 2 – GEHEIMER FUCHSBUND:\n\n" +
   "Die Mondmünze und die Sternmünze liegen seit Spielbeginn " +
   "versteckt im Kuhstall. Ihr beiden Vöchter kennt euch nicht.\n\n" +
-  "Finde eine der beiden Münzen und halte sie zunächst bei dir. " +
+  "Deine Münze ist {FUCHS_MUENZE}. Suche nur diese Münze und halte sie zunächst bei dir. " +
   "Beobachte, wer nach der anderen Münze sucht.\n\n" +
   "Sprich eine verdächtige Person unauffällig an:\n" +
   "„Ist hier noch Platz im Stall?“\n\n" +
@@ -334,6 +359,7 @@ function assignMissionsToPlayers(players) {
 
   // Vöchter: pro Phase eine Pflichtmission, ohne Überschneidung der beiden.
   const voechter = shuffle(result.filter(player => player.role === 'voechter'));
+  voechter.forEach((member, index) => { member.fuchsCoin = index === 0 ? 'MOND' : 'STERN'; });
   for (const phase of SETTINGS.phases) {
     const pool = shuffle(MISSIONS.voechter.filter(mission => mission.phase === phase));
     if (pool.length < voechter.length) {
@@ -397,7 +423,7 @@ function generateGame() {
   saveHost(); renderTickets(); showScreen('tickets');
 }
 function ticketUrl(player) {
-  const ticket = { gameId: hostData.gameId, playerId: player.id, name: player.name, role: player.role, assignedMissions: player.assignedMissions, players: hostData.players.map(p => ({ id: p.id, name: p.name })) };
+  const ticket = { gameId: hostData.gameId, playerId: player.id, name: player.name, role: player.role, assignedMissions: player.assignedMissions, fuchsCoin: player.fuchsCoin || null, players: hostData.players.map(p => ({ id: p.id, name: p.name })) };
   const url = new URL(window.location.href);
   url.search = ''; url.hash = 'ticket=' + encodeTicket(ticket);
   return url.toString();
@@ -419,6 +445,17 @@ function ensureHostMissions() {
       player.assignedMissions = expanded;
       changed = true;
     }
+  }
+  // Auch ältere gespeicherte Stallmeister-Runden erhalten zwei verschiedene
+  // Erkennungsmünzen. Die Rollen bleiben dabei unverändert.
+  const spies = hostData.players.filter(p => p.role === 'voechter');
+  if (spies.length === 2 &&
+      (!['MOND', 'STERN'].includes(spies[0].fuchsCoin) ||
+       !['MOND', 'STERN'].includes(spies[1].fuchsCoin) ||
+       spies[0].fuchsCoin === spies[1].fuchsCoin)) {
+    spies[0].fuchsCoin = 'MOND';
+    spies[1].fuchsCoin = 'STERN';
+    changed = true;
   }
   if (changed) saveHost();
 }
@@ -471,11 +508,12 @@ function loadTicketFromUrl() {
     }
     const existing = readJson(STORAGE_KEY);
     if (existing && existing.gameId === ticket.gameId && existing.playerId === ticket.playerId) {
-      state = { ...existing, assignedMissions: ticket.assignedMissions };
+      state = { ...existing, assignedMissions: ticket.assignedMissions, fuchsCoin: ticket.fuchsCoin || existing.fuchsCoin || null };
       // Alte, nicht mehr zugeteilte Erfolge nicht weiterzählen.
       state.done = (state.done || []).filter(id => state.assignedMissions.includes(id));
+      state.skipped = (state.skipped || []).filter(id => state.assignedMissions.includes(id));
     } else {
-      state = { ...ticket, phase: 1, done: [], vote: null };
+      state = { ...ticket, phase: 1, done: [], skipped: [], vote: null };
     }
     saveState();
     history.replaceState(null, '', location.pathname + location.search);
@@ -486,6 +524,7 @@ function restorePlayer() {
   const stored = readJson(STORAGE_KEY);
   if (!stored || !stored.gameId || !stored.playerId || !Array.isArray(stored.assignedMissions)) return false;
   state = stored;
+  if (!Array.isArray(state.skipped)) state.skipped = [];
   if (state.role === 'crew') {
     state.assignedMissions = upgradeCrewMissions(state.assignedMissions);
     saveState();
@@ -520,21 +559,23 @@ function renderPlayer() {
 function renderMissions() {
   const list = $('missionList'); list.replaceChildren();
   const missions = getPlayerMissions();
+  if (!Array.isArray(state.skipped)) state.skipped = [];
 
   if (state.role === 'crew') {
     // Nur EINE offene Mission der AKTUELLEN Phase anzeigen.
     // Unerledigte Aufgaben früherer Phasen werden nicht mehr angeboten.
     const next = missions.find(mission =>
-      mission.phase === state.phase && !state.done.includes(mission.id));
+      mission.phase === state.phase && !state.done.includes(mission.id) && !state.skipped.includes(mission.id));
     const currentPhaseMissions = missions.filter(mission => mission.phase === state.phase);
     const completed = currentPhaseMissions.filter(mission => state.done.includes(mission.id)).length;
-    addText(list, 'p', `Phase ${state.phase}: ${completed} von ${currentPhaseMissions.length} Missionen erledigt. Es wird immer nur eine aktuelle Aufgabe angezeigt.`, 'small');
+    const skipped = currentPhaseMissions.filter(mission => state.skipped.includes(mission.id)).length;
+    addText(list, 'p', `Phase ${state.phase}: ${completed} erledigt, ${skipped} übersprungen, ${currentPhaseMissions.length - completed - skipped} offen. Immer nur eine aktuelle Aufgabe.`, 'small');
 
     if (!next) {
       const hasLocked = missions.some(mission => mission.phase > state.phase);
       addText(list, 'p', hasLocked
-        ? '🎉 Alle Missionen dieser Phase geschafft! Warte auf die nächste Phase.'
-        : '🏆 Alle Missionen geschafft! Warte auf das Finale.');
+        ? '🎉 Keine offenen Missionen dieser Phase mehr. Warte auf die nächste Phase.'
+        : '🏆 Keine offenen Missionen mehr. Warte auf das Finale.');
       return;
     }
 
@@ -543,10 +584,16 @@ function renderMissions() {
     addText(box, 'p', next.text);
     box.appendChild(makeButton('✓ Mission erledigt – nächste anzeigen', () => {
       // Auch bei verspäteten Klicks nur Aufgaben der aktuell aktiven Phase akzeptieren.
-      if (state.phase !== next.phase || state.done.includes(next.id)) return;
+      if (state.phase !== next.phase || state.done.includes(next.id) || state.skipped.includes(next.id)) return;
       state.done.push(next.id);
       saveState(); renderPlayer();
     }, ''));
+    box.appendChild(makeButton('⏭ Mission überspringen (0 Punkte)', () => {
+      if (state.phase !== next.phase || state.done.includes(next.id) || state.skipped.includes(next.id)) return;
+      state.skipped.push(next.id);
+      saveState();
+      renderPlayer();
+    }, 'secondary'));
     list.appendChild(box);
     return;
   }
@@ -557,7 +604,9 @@ function renderMissions() {
     const completed = state.done.includes(mission.id);
     const box = document.createElement('div'); box.className = 'mission' + (completed ? ' done' : '');
     addText(box, 'span', `Phase ${mission.phase} · Pflichtmission`, 'tag');
-    addText(box, 'p', available ? mission.text : '🔒 Diese geheime Mission wird erst in Phase ' + mission.phase + ' enthüllt.');
+    addText(box, 'p', available
+      ? mission.text.replace('{FUCHS_MUENZE}', state.fuchsCoin || 'MOND oder STERN (bitte neue Spielerlinks erstellen)')
+      : '🔒 Diese geheime Mission wird erst in Phase ' + mission.phase + ' enthüllt.');
     if (available) {
       box.appendChild(makeButton(completed ? '✓ Erledigt – zurücknehmen' : '✓ Mission erledigt', () => {
         if (state.done.includes(mission.id)) state.done = state.done.filter(id => id !== mission.id);
