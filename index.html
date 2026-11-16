@@ -26,7 +26,7 @@
 
   <section id="setup" class="card hidden">
     <h2>🎩 Spiel vorbereiten</h2>
-    <p>Einmalig am Stallmeister-Handy Namen eingeben. Die Webseite verteilt zufällig genau zwei Vöchter. Die persönlichen Zugangslinks danach einzeln weitergeben.</p>
+    <p>Einmalig am Stallmeister-Handy Namen eingeben. Die Webseite verteilt zufällig genau zwei Vöchter und individuelle Missionen. Die persönlichen Zugangslinks danach einzeln weitergeben.</p>
     <label for="namesInput">Spielernamen (jeweils eine Zeile)</label>
     <textarea id="namesInput" rows="9" placeholder="Anna&#10;Ben&#10;Clara&#10;David&#10;Emma"></textarea>
     <div class="row topline"><button id="generateBtn">Rollen auslosen und Links erstellen</button><button id="backBtn" class="secondary">Zurück</button></div>
@@ -35,7 +35,7 @@
 
   <section id="tickets" class="card hidden">
     <h2>🎟️ Geheime Spielerzugänge</h2>
-    <div class="notice">Jeder bekommt <strong>nur seinen eigenen Link/QR-Code</strong>. Bitte nicht gemeinsam auf einem Bildschirm alle Zugänge öffnen. Die Links enthalten geheime Rolleninformationen – nicht öffentlich teilen!</div>
+    <div class="notice">Jeder bekommt <strong>nur seinen eigenen Link/QR-Code</strong>. Neue Spielrunden brauchen neu erzeugte Links, damit die Missionen zugeteilt werden. Bitte nicht gemeinsam auf einem Bildschirm alle Zugänge öffnen. Die Links enthalten geheime Rolleninformationen – nicht öffentlich teilen!</div>
     <div id="ticketList"></div>
     <button id="openOwnBtn" class="secondary">Eigener Link bereits geöffnet? Zur Startseite</button>
   </section>
@@ -95,7 +95,7 @@ const SETTINGS = {
 // text:  Aufgabentext, der auf dem Handy erscheint
 // points: Punkte für das Inkompetenzteam (nur bei crew-Missionen)
 //
-// WICHTIG: Vöchter müssen ALLE ihre Missionen erledigen, um gewinnen zu können.
+// WICHTIG: Vöchter müssen ALLE ihre ZUGETEILTEN Missionen erledigen, um gewinnen zu können.
 // Darum sollten ihre Aufgaben machbar und klar überprüfbar sein.
 // Bei jeder Rolle kannst du einfach weitere Zeilen im gleichen Format ergänzen.
 const MISSIONS = {
@@ -513,6 +513,63 @@ function shuffle(array) {
 }
 
 // ============================================================================
+// 3a. ZUFÄLLIGE MISSIONEN – ZUTEILUNG BEIM ERSTELLEN DER SPIELERLINKS
+// ============================================================================
+// Die Zuteilung erfolgt zentral auf dem Stallmeister-Handy und wird im
+// persönlichen Spielerlink mitgegeben. So bekommen die beiden Vöchter
+// garantiert unterschiedliche Missionen pro Phase.
+//
+// Crew:     2 Missionen pro Phase (= 6 insgesamt)
+// Vöchter:  1 Mission pro Phase (= 3 Pflichtmissionen insgesamt)
+//
+// Crew-Aufgaben können sich bei vielen Spielern wiederholen, da pro Phase
+// nur 12 Aufgaben vorhanden sind, aber bis zu 8 Crewmitglieder je 2 brauchen.
+// Wir verteilen zunächst alle Aufgaben einmal, bevor eine wiederholt wird.
+function assignMissionsToPlayers(players) {
+  const result = players.map(player => ({ ...player, assignedMissions: [] }));
+
+  for (const role of ['crew', 'voechter']) {
+    const members = result.filter(player => player.role === role);
+    const amount = role === 'crew' ? 2 : 1;
+
+    for (const phase of SETTINGS.phases) {
+      const pool = MISSIONS[role].filter(mission => mission.phase === phase);
+
+      if (pool.length < amount || (role === 'voechter' && pool.length < members.length)) {
+        throw new Error(`Zu wenige ${role}-Missionen in Phase ${phase}.`);
+      }
+
+      // Eine gemischte Runde durch den Pool; erst danach neu mischen.
+      let queue = [];
+      for (const member of shuffle(members)) {
+        for (let i = 0; i < amount; i++) {
+          if (queue.length === 0) queue = shuffle(pool);
+
+          // Keine identische Mission zweimal für dieselbe Person.
+          const used = new Set(member.assignedMissions);
+          let index = queue.findIndex(mission => !used.has(mission.id));
+          if (index === -1) {
+            queue = shuffle(pool);
+            index = queue.findIndex(mission => !used.has(mission.id));
+          }
+          const [chosen] = queue.splice(index, 1);
+          member.assignedMissions.push(chosen.id);
+        }
+      }
+    }
+  }
+
+  return result;
+}
+
+// Zeigt und zählt nur Missionen, die diesem Spieler zugewiesen wurden.
+function getPlayerMissions() {
+  if (!state || !Array.isArray(state.assignedMissions)) return [];
+  const ids = new Set(state.assignedMissions);
+  return MISSIONS[state.role].filter(mission => ids.has(mission.id));
+}
+
+// ============================================================================
 // 4. SPIEL VORBEREITEN: NAMEN, ZUFALLSROLLEN, PERSÖNLICHE LINKS
 // ============================================================================
 function generateGame() {
@@ -528,11 +585,17 @@ function generateGame() {
   if (!confirm('Neue Rollen auslosen? Bereits vorhandene Stallmeister-Daten auf diesem Gerät werden ersetzt.')) return;
   const roles = shuffle([...Array(SETTINGS.voechterCount).fill('voechter'), ...Array(names.length - SETTINGS.voechterCount).fill('crew')]);
   const gameId = makeId();
-  hostData = { gameId, players: names.map((name, i) => ({ id: `p${i+1}`, name, role: roles[i] })) };
+  try {
+    const players = names.map((name, i) => ({ id: `p${i+1}`, name, role: roles[i] }));
+    hostData = { gameId, players: assignMissionsToPlayers(players) };
+  } catch (error) {
+    $('setupError').textContent = error.message;
+    return;
+  }
   saveHost(); renderTickets(); showScreen('tickets');
 }
 function ticketUrl(player) {
-  const ticket = { gameId: hostData.gameId, playerId: player.id, name: player.name, role: player.role, players: hostData.players.map(p => ({ id: p.id, name: p.name })) };
+  const ticket = { gameId: hostData.gameId, playerId: player.id, name: player.name, role: player.role, assignedMissions: player.assignedMissions, players: hostData.players.map(p => ({ id: p.id, name: p.name })) };
   const url = new URL(window.location.href);
   url.search = ''; url.hash = 'ticket=' + encodeTicket(ticket);
   return url.toString();
@@ -567,10 +630,15 @@ function loadTicketFromUrl() {
   if (!match) return false;
   try {
     const ticket = decodeTicket(match[1]);
-    if (!ticket.gameId || !ticket.playerId || !['crew', 'voechter'].includes(ticket.role) || !Array.isArray(ticket.players)) throw Error('Ungültiges Ticket');
+    if (!ticket.gameId || !ticket.playerId || !['crew', 'voechter'].includes(ticket.role) || !Array.isArray(ticket.players) || !Array.isArray(ticket.assignedMissions)) throw Error('Ungültiges oder veraltetes Ticket');
     const existing = readJson(STORAGE_KEY);
-    if (existing && existing.gameId === ticket.gameId && existing.playerId === ticket.playerId) state = existing;
-    else state = { ...ticket, phase: 1, done: [], vote: null };
+    if (existing && existing.gameId === ticket.gameId && existing.playerId === ticket.playerId) {
+      state = { ...existing, assignedMissions: ticket.assignedMissions };
+      // Alte, nicht mehr zugeteilte Erfolge nicht weiterzählen.
+      state.done = (state.done || []).filter(id => state.assignedMissions.includes(id));
+    } else {
+      state = { ...ticket, phase: 1, done: [], vote: null };
+    }
     saveState();
     history.replaceState(null, '', location.pathname + location.search);
     return true;
@@ -578,7 +646,7 @@ function loadTicketFromUrl() {
 }
 function restorePlayer() {
   const stored = readJson(STORAGE_KEY);
-  if (!stored || !stored.gameId || !stored.playerId) return false;
+  if (!stored || !stored.gameId || !stored.playerId || !Array.isArray(stored.assignedMissions)) return false;
   state = stored; return true;
 }
 function renderPlayer() {
@@ -590,7 +658,7 @@ function renderPlayer() {
   $('roleDescription').textContent = isCrew
     ? 'Sammle persönliche Punkte und halte Ausschau nach den beiden Vöchtern. Wer aus dem Inkompetenzteam die meisten Punkte erreicht, wird Inkompetenz-Champion!'
     : 'Pssst! Du bist einer der beiden Vöchter. Erledige ALLE deine Pflichtmissionen und sorge dafür, dass mindestens einer von euch nicht enttarnt wird.';
-  const missions = MISSIONS[state.role];
+  const missions = getPlayerMissions();
   const done = missions.filter(m => state.done.includes(m.id));
   const points = isCrew ? done.reduce((sum, m) => sum + m.points, 0) : 0;
   $('playerScore').textContent = isCrew ? `${points} Punkte` : `${done.length}/${missions.length} Pflicht`;
@@ -606,7 +674,7 @@ function renderPlayer() {
 }
 function renderMissions() {
   const list = $('missionList'); list.replaceChildren();
-  MISSIONS[state.role].forEach(mission => {
+  getPlayerMissions().forEach(mission => {
     const available = mission.phase <= state.phase;
     const completed = state.done.includes(mission.id);
     const box = document.createElement('div'); box.className = 'mission' + (completed ? ' done' : '');
@@ -644,11 +712,11 @@ function renderFinal() {
   if (state.vote) { $('guess1').value = state.vote[0]; $('guess2').value = state.vote[1]; }
   $('voterSummary').replaceChildren();
   if (state.role === 'voechter') {
-    const missions = MISSIONS.voechter;
+    const missions = getPlayerMissions();
     const done = missions.filter(m => state.done.includes(m.id)).length;
     addText($('voterSummary'), 'p', `Dein Pflichtmissionsstatus: ${done} von ${missions.length} erledigt. Zeige diesen Status dem Stallmeister bei der Auswertung.`);
   } else {
-    const score = MISSIONS.crew.filter(m => state.done.includes(m.id)).reduce((s,m)=>s+m.points,0);
+    const score = getPlayerMissions().filter(m => state.done.includes(m.id)).reduce((s,m)=>s+m.points,0);
     addText($('voterSummary'), 'p', `Dein Endpunktestand: ${score}. Zeige ihn dem Stallmeister für die Inkompetenz-Rangliste.`);
   }
   renderReceipt();
