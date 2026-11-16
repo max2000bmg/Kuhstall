@@ -99,19 +99,374 @@ const SETTINGS = {
 // Darum sollten ihre Aufgaben machbar und klar überprüfbar sein.
 // Bei jeder Rolle kannst du einfach weitere Zeilen im gleichen Format ergänzen.
 const MISSIONS = {
+
+  // ==========================================================
+  // 🐮 INKOMPETENZTEAM
+  // ==========================================================
+  // Jeder Spieler soll später pro Phase 2 zufällige
+  // Missionen aus diesem Pool erhalten.
+  //
+  // points = Punkte für die persönliche Rangliste.
+  // phase  = 1, 2 oder 3.
+  // id     = Muss für jede Mission eindeutig sein.
+  // ==========================================================
+
   crew: [
-    { id: 'c01', phase: 1, points: 10, text: 'Bringe jemanden dazu, eine lustige Erinnerung an eine frühere Feier zu erzählen.' },
-    { id: 'c02', phase: 1, points: 10, text: 'Lass dir von einem anderen Gast einen neuen Kuhstall-Spitznamen geben.' },
-    { id: 'c03', phase: 2, points: 15, text: 'Sorge dafür, dass mindestens drei Gäste gleichzeitig über ein gemeinsames Thema sprechen.' },
-    { id: 'c04', phase: 2, points: 15, text: 'Überzeuge jemanden, dir eine besonders kuriose Kirmesgeschichte zu erzählen.' },
-    { id: 'c05', phase: 3, points: 20, text: 'Bringe zwei andere Gäste dazu, sich gegenseitig ein Kompliment zu machen.' },
-    { id: 'c06', phase: 3, points: 20, text: 'Sorge dafür, dass mindestens drei Personen gemeinsam einen Kuhstall-Schlachtruf erfinden.' }
+
+    // --------------------------------------------------------
+    // PHASE 1 – UNAUFFÄLLIGER EINSTIEG
+    // --------------------------------------------------------
+
+    {
+      id: 'c01',
+      phase: 1,
+      points: 10,
+      text: 'Bringe jemanden dazu, eine lustige Geschichte von einer früheren Kuhstall-Feier zu erzählen.'
+    },
+    {
+      id: 'c02',
+      phase: 1,
+      points: 10,
+      text: 'Lass dir von einem anderen Gast einen neuen Kuhstall-Spitznamen geben.'
+    },
+    {
+      id: 'c03',
+      phase: 1,
+      points: 10,
+      text: 'Bringe jemanden dazu, dir sein Lieblings-Metallschild an der Wand zu zeigen.'
+    },
+    {
+      id: 'c04',
+      phase: 1,
+      points: 10,
+      text: 'Finde jemanden, der behauptet, besser Dart spielen zu können als du.'
+    },
+    {
+      id: 'c05',
+      phase: 1,
+      points: 10,
+      text: 'Bringe jemanden dazu, dir zu erzählen, welche alte Spielkonsole seine Lieblingskonsole war.'
+    },
+    {
+      id: 'c06',
+      phase: 1,
+      points: 10,
+      text: 'Lass dir von jemandem erklären, welches Getränk aus dem Kühlschrank er am liebsten mag.'
+    },
+    {
+      id: 'c07',
+      phase: 1,
+      points: 10,
+      text: 'Bringe jemanden dazu, das Wort „Inkompetenz“ in einem normalen Gespräch auszusprechen.'
+    },
+    {
+      id: 'c08',
+      phase: 1,
+      points: 10,
+      text: 'Finde heraus, welcher Gast schon einmal eine besonders peinliche Kirmesgeschichte erlebt hat.'
+    },
+    {
+      id: 'c09',
+      phase: 1,
+      points: 10,
+      text: 'Sorge dafür, dass jemand freiwillig einen Blick in das Konsolenregal wirft.'
+    },
+    {
+      id: 'c10',
+      phase: 1,
+      points: 10,
+      text: 'Bringe jemanden dazu, den alten Hängeschrank ausdrücklich zu erwähnen.'
+    },
+    {
+      id: 'c11',
+      phase: 1,
+      points: 10,
+      text: 'Lass jemanden entscheiden, ob er lieber an der Theke oder an der Dartscheibe stehen würde.'
+    },
+    {
+      id: 'c12',
+      phase: 1,
+      points: 10,
+      text: 'Bringe jemanden dazu, dir zu erzählen, welches Videospiel er früher am häufigsten gespielt hat.'
+    },
+
+    // --------------------------------------------------------
+    // PHASE 2 – MEHR INTERAKTION UND ERSTE VERDÄCHTIGUNGEN
+    // --------------------------------------------------------
+
+    {
+      id: 'c13',
+      phase: 2,
+      points: 15,
+      text: 'Überzeuge jemanden, mit dir eine Runde Dart zu spielen, sofern die Dartscheibe frei ist.'
+    },
+    {
+      id: 'c14',
+      phase: 2,
+      points: 15,
+      text: 'Bringe zwei andere Gäste dazu, über PlayStation gegen Nintendo zu diskutieren.'
+    },
+    {
+      id: 'c15',
+      phase: 2,
+      points: 15,
+      text: 'Sorge dafür, dass jemand ein Metallschild an der Wand laut vorliest.'
+    },
+    {
+      id: 'c16',
+      phase: 2,
+      points: 15,
+      text: 'Bringe jemanden dazu, den Spieleautomaten genauer zu betrachten.'
+    },
+    {
+      id: 'c17',
+      phase: 2,
+      points: 15,
+      text: 'Lass dir von jemandem erklären, wie er den Kuhstall umgestalten würde.'
+    },
+    {
+      id: 'c18',
+      phase: 2,
+      points: 15,
+      text: 'Überzeuge jemanden, dir einen besonders schlechten Witz zu erzählen.'
+    },
+    {
+      id: 'c19',
+      phase: 2,
+      points: 15,
+      text: 'Bringe zwei Gäste dazu, gemeinsam einen Namen für eine neue Kuhstall-Kirmesattraktion zu erfinden.'
+    },
+    {
+      id: 'c20',
+      phase: 2,
+      points: 15,
+      text: 'Sorge dafür, dass jemand freiwillig den gefliesten Innenraum des alten Hängeschranks betrachtet, ohne etwas darin zu verändern.'
+    },
+    {
+      id: 'c21',
+      phase: 2,
+      points: 15,
+      text: 'Bringe jemanden dazu, die Frage zu beantworten, ob der Kuhstall oder die Vöchter Kirmes die bessere Party veranstaltet.'
+    },
+    {
+      id: 'c22',
+      phase: 2,
+      points: 15,
+      text: 'Lass dir von jemandem erklären, warum die Garderobe an ihrem aktuellen Platz gut oder schlecht aufgehoben ist.'
+    },
+    {
+      id: 'c23',
+      phase: 2,
+      points: 15,
+      text: 'Überzeuge jemanden, dir seinen besten Tipp für einen Dart-Anfänger zu geben.'
+    },
+    {
+      id: 'c24',
+      phase: 2,
+      points: 15,
+      text: 'Bringe mindestens zwei Gäste dazu, sich auf das beste alte Konsolenspiel zu einigen.'
+    },
+
+    // --------------------------------------------------------
+    // PHASE 3 – DAS FINALE RÜCKT NÄHER
+    // --------------------------------------------------------
+
+    {
+      id: 'c25',
+      phase: 3,
+      points: 20,
+      text: 'Bringe mindestens drei Gäste dazu, gemeinsam einen Kuhstall-Schlachtruf zu erfinden.'
+    },
+    {
+      id: 'c26',
+      phase: 3,
+      points: 20,
+      text: 'Überzeuge zwei Gäste, dir jeweils einen Verdächtigen für die Vöchter-Rolle zu nennen.'
+    },
+    {
+      id: 'c27',
+      phase: 3,
+      points: 20,
+      text: 'Bringe jemanden dazu, vor mindestens zwei anderen Gästen eine kurze Lobrede auf den Kuhstall zu halten.'
+    },
+    {
+      id: 'c28',
+      phase: 3,
+      points: 20,
+      text: 'Sorge dafür, dass mindestens drei Personen über den größten Kuhstall-Skandal diskutieren, den sie sich vorstellen können.'
+    },
+    {
+      id: 'c29',
+      phase: 3,
+      points: 20,
+      text: 'Bringe zwei Gäste dazu, sich gegenseitig einen Kuhstall-Spitznamen zu geben.'
+    },
+    {
+      id: 'c30',
+      phase: 3,
+      points: 20,
+      text: 'Überzeuge jemanden, einen anderen Gast zu einem freiwilligen Dart-Duell herauszufordern.'
+    },
+    {
+      id: 'c31',
+      phase: 3,
+      points: 20,
+      text: 'Bringe jemanden dazu, zu erklären, welches der Metallschilder am besten zur Kuhstall-Jubiläumsfeier passt.'
+    },
+    {
+      id: 'c32',
+      phase: 3,
+      points: 20,
+      text: 'Sorge dafür, dass mindestens drei Gäste gemeinsam ein neues Motto für den Kuhstall vorschlagen.'
+    },
+    {
+      id: 'c33',
+      phase: 3,
+      points: 20,
+      text: 'Bringe jemanden dazu, eine Theorie aufzustellen, warum die Vöchter den Kuhstall sabotieren wollen.'
+    },
+    {
+      id: 'c34',
+      phase: 3,
+      points: 20,
+      text: 'Überzeuge zwei Gäste, sich auf die beste Attraktion einer perfekten Kirmes zu einigen.'
+    },
+    {
+      id: 'c35',
+      phase: 3,
+      points: 20,
+      text: 'Bringe jemanden dazu, einen anderen Gast ausdrücklich als „verdächtig“ zu bezeichnen.'
+    },
+    {
+      id: 'c36',
+      phase: 3,
+      points: 20,
+      text: 'Sorge dafür, dass mindestens drei Gäste gemeinsam eine absurde neue Kuhstall-Regel erfinden.'
+    }
+
   ],
+
+  // ==========================================================
+  // 🦊 DIE BEIDEN VÖCHTER
+  // ==========================================================
+  // Jeder Vöchter soll später pro Phase 1 zufällige
+  // Pflichtmission erhalten.
+  //
+  // Beide müssen ihre jeweils 3 zugeteilten Missionen
+  // erfüllen, damit die Vöchter gewinnen können.
+  //
+  // Vöchter erhalten keine persönlichen Ranglistenpunkte.
+  // ==========================================================
+
   voechter: [
-    { id: 'v01', phase: 1, text: 'Bringe jemanden dazu, die Vöchter Kirmes als Gesprächsthema anzusprechen, ohne deine Mission zu verraten.' },
-    { id: 'v02', phase: 2, text: 'Überzeuge einen Gast im Gespräch, mindestens einen Vorteil der Vöchter Kirmes gegenüber dem Kuhstall zu nennen.' },
-    { id: 'v03', phase: 3, text: 'Sorge dafür, dass mindestens zwei Gäste über die Frage diskutieren, ob die Vöchter Kirmes nächstes Jahr besser besucht sein könnte.' }
+
+    // --------------------------------------------------------
+    // PHASE 1 – VERDECKTE STICHELEIEN
+    // --------------------------------------------------------
+
+    {
+      id: 'v01',
+      phase: 1,
+      text: 'Bringe jemanden dazu, die Vöchter Kirmes von sich aus als Gesprächsthema aufzugreifen.'
+    },
+    {
+      id: 'v02',
+      phase: 1,
+      text: 'Überzeuge jemanden, mindestens einen Grund zu nennen, warum die Vöchter Kirmes besser als der Kuhstall sein könnte.'
+    },
+    {
+      id: 'v03',
+      phase: 1,
+      text: 'Bringe jemanden dazu, sich darüber zu beschweren, dass im Kuhstall irgendetwas verbessert werden müsste.'
+    },
+    {
+      id: 'v04',
+      phase: 1,
+      text: 'Lass jemanden die Frage stellen, warum die Vöchter eigentlich nicht zur Kuhstall-Feier eingeladen wurden.'
+    },
+    {
+      id: 'v05',
+      phase: 1,
+      text: 'Bringe jemanden dazu, das Wort „Sabotage“ auszusprechen, ohne selbst dieses Wort zu verwenden.'
+    },
+    {
+      id: 'v06',
+      phase: 1,
+      text: 'Überzeuge jemanden davon, dass auf einer richtigen Kirmes mehr los ist als im Kuhstall.'
+    },
+
+    // --------------------------------------------------------
+    // PHASE 2 – DIE SABOTAGE WIRD DEUTLICHER
+    // --------------------------------------------------------
+
+    {
+      id: 'v07',
+      phase: 2,
+      text: 'Bringe jemanden dazu, vor einem weiteren Gast laut zu behaupten, dass die Vöchter Kirmes die bessere Veranstaltung sei.'
+    },
+    {
+      id: 'v08',
+      phase: 2,
+      text: 'Sorge dafür, dass zwei Gäste darüber diskutieren, ob der Kuhstall einen neuen Namen braucht.'
+    },
+    {
+      id: 'v09',
+      phase: 2,
+      text: 'Bringe jemanden dazu, den Spieleautomaten als mögliche Hauptattraktion einer Vöchter Kirmes vorzuschlagen.'
+    },
+    {
+      id: 'v10',
+      phase: 2,
+      text: 'Überzeuge jemanden, mindestens zwei Dinge aufzuzählen, die bei einer Kirmes besser funktionieren als bei einer Kuhstall-Feier.'
+    },
+    {
+      id: 'v11',
+      phase: 2,
+      text: 'Sorge dafür, dass jemand ernsthaft oder scherzhaft vorschlägt, ein Metallschild mit Werbung für die Vöchter Kirmes aufzuhängen.'
+    },
+    {
+      id: 'v12',
+      phase: 2,
+      text: 'Bringe jemanden dazu, vor mindestens einem weiteren Gast zu behaupten, dass die Kuhstall-Crew inkompetent sei.'
+    },
+
+    // --------------------------------------------------------
+    // PHASE 3 – DER LETZTE ANGRIFF
+    // --------------------------------------------------------
+
+    {
+      id: 'v13',
+      phase: 3,
+      text: 'Bringe mindestens zwei Gäste dazu, gemeinsam einen Werbespruch für die Vöchter Kirmes zu erfinden.'
+    },
+    {
+      id: 'v14',
+      phase: 3,
+      text: 'Sorge dafür, dass jemand öffentlich vorschlägt, die nächste Feier lieber auf der Vöchter Kirmes zu veranstalten.'
+    },
+    {
+      id: 'v15',
+      phase: 3,
+      text: 'Überzeuge zwei Gäste, sich auf mindestens einen Vorteil der Vöchter Kirmes gegenüber dem Kuhstall zu einigen.'
+    },
+    {
+      id: 'v16',
+      phase: 3,
+      text: 'Bringe jemanden dazu, einen anderen Gast scherzhaft als möglichen Saboteur der Vöchter zu beschuldigen.'
+    },
+    {
+      id: 'v17',
+      phase: 3,
+      text: 'Sorge dafür, dass mindestens zwei Gäste über die Frage diskutieren, ob die Vöchter Kirmes nächstes Jahr besser besucht sein wird.'
+    },
+    {
+      id: 'v18',
+      phase: 3,
+      text: 'Bringe jemanden dazu, eine kurze, spontane Werbeansage für die Vöchter Kirmes zu machen.'
+    }
+
   ]
+
 };
 
 // ============================================================================
